@@ -16,11 +16,15 @@ const openai_key = process.env.OPENAI_API_KEY;
 // const matchProd = require('');
 
 fashionAdvisorController.ImgGenService = async (req, res, next) => {
-  
+    // console.log(req.body)
 
   
-    console.log('hi');
-    const { item, color, style } = req.body;
+    // const { item, color, style } = req.body;
+    let item = 'shirt'
+    let color = 'pink'
+    let style = 'sporty'
+
+  
     console.log(item, color, style);
   
     if (!item || !color || !style) {

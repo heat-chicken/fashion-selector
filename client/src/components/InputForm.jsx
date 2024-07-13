@@ -23,7 +23,7 @@ function InputForm({ onImageGenerated }) { // InputForm component takes in onIma
       const data = await response.json();
       // onImageGenerated(data.imageUrl); // Pass img URL to parent component (Search.jsx) via onImageGenerated prop
       console.log('data:', data);
-      onImageGenerated(data.data[0].url);
+      onImageGenerated(data.url);
     } catch (error) {
       console.error('Error:', error);
     }

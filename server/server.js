@@ -1,21 +1,21 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const PORT = 8080;
+const PORT = 3003;
 
 const fashionAdvisorController = require('./controllers/fashionAdvisorController');
 
 app.use(express.json()); //delete if no need for json 
 
 
-app.post('/api/genImg', fashionAdvisorController.ImgGenService, (req, res) => {
+app.post('/api/genImage', fashionAdvisorController.ImgGenService, (req, res) => {
     console.log('serving image generater')
 
     
     return res.status(200)
 })
 
-app.post('/api/match', fashionAdvisorController.matchService, (req, res) => {
+app.post('/api/bing', fashionAdvisorController.matchService, (req, res) => {
     console.log('serving match generater')
 
  
@@ -23,7 +23,7 @@ app.post('/api/match', fashionAdvisorController.matchService, (req, res) => {
 })
 
 // this should take the user to the first page
-app.use('/', (req, res) => {
+app.get('/', (req, res) => {
     console.log('get to the first page ')
     return res.status(200).sendFile(path.join(__dirname, '../client/public/index.html'));
   });
