@@ -1,47 +1,51 @@
-const path = require('path');
 const express = require('express');
+const path = require('path');
 const app = express();
-const PORT = 3003;
-const cors = require('cors');
-app.use(cors());// allow cross origin requests
+const PORT = 3000;
 
-// testing get request for '/' route
-app.get('/', (req, res) => {
-  return res.status(200).send('<h1>Hello from Express!</h1>');
-});
+const fashionAdvisorController = require('./controllers/fashionAdvisorController');
 
-app.post('/api/genImage', (req, res) => {
-  console.log('POST request received at /api/genImage');
-  res.json({
-    data: [
-      {
-        url: "https://example.com/fake-image-1024x1024.jpg"
-      }
-    ]
+app.use(express.json()); //delete if no need for json 
+
+
+app.post('/api/genImg', fashionAdvisorController.ImgGenService, (req, res) => {
+    console.log('serving image generater')
+
+    
+    return res.status(200)
+})
+
+app.post('/api/match', fashionAdvisorController.matchService, (req, res) => {
+    console.log('serving match generater')
+
+ 
+    return res.status(200)
+})
+
+// this should take the user to the first page
+app.use('/', (req, res) => {
+    console.log('get to the first page ')
+    return res.status(200).sendFile(path.join(__dirname, '../client/public/index.html'));
   });
-});
-
-// testing get request for '/api/genImage' route
-app.post('/mockDalleImg', (req, res) => {
-  console.log('POST request received at /mockDalleImg');
-  res.json({
-    data: [
-      {
-        url: "https://example.com/fake-image-1024x1024.jpg"
-      }
-    ]
+  
+/**
+ * 404 handler
+ */
+app.use('*', (req,res) => {
+    console.log('error finding url')
+    res.status(404).send('Not Found');
   });
-});
-
-
-// global error handler
+  
+/**
+  * Global error handler
+  */
 app.use((err, req, res, next) => {
   console.log(err);
-  res.status(500).send({ message: err.message });
-});
+  console.log('hit global error');
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}...`);
+  res.status(500).send({ error: err });
 });
-
+  
+app.listen(PORT, ()=>{ console.log(`Listening on port ${PORT}...`); });
+  
 module.exports = app;
