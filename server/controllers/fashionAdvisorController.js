@@ -19,10 +19,8 @@ fashionAdvisorController.ImgGenService = async (req, res, next) => {
     // console.log(req.body)
 
   
-    // const { item, color, style } = req.body;
-    let item = 'shirt'
-    let color = 'pink'
-    let style = 'sporty'
+    const { item, color, style } = req.body;
+
 
   
     console.log(item, color, style);
