@@ -10,6 +10,9 @@ app.get('/', (req, res) => {
   return res.status(200).send('<h1>Hello from Express!</h1>');
 });
 
+/////////////////////////////////////////////////////////////
+// Sorry Yoshi, I tried not to make a mess 
+// testing get request for '/api/genImage' route
 app.post('/api/genImage', (req, res) => {
   console.log('POST request received at /api/genImage');
   res.json({
@@ -47,7 +50,7 @@ app.post('/api/bing', (req, res) => {
     }
   ]);
 });
-
+//////////////////////////////////////////////////////////////////
 
 // global error handler
 app.use((err, req, res, next) => {
