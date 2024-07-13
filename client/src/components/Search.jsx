@@ -55,7 +55,7 @@ function Search() {
       {currentImageUrl && (
         <div>
           <img src={currentImageUrl} alt="Generated" />
-          <button onClick={handleNoClick}>No</button> 
+          <button onClick={handleNoClick}>No</button>  
           <button onClick={handleYesClick}>Yes</button>
         </div>
       )}
