@@ -29,6 +29,7 @@
     "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "form-data": "^4.0.0",
     "nodemon": "^3.1.4",
