@@ -1,16 +1,22 @@
 const fashionAdvisorController = {};
+const dotenv = require('dotenv');
 
-// !!!!!!!! put these in .env before commit!!!!!!!!!!!
-const subscriptionKey = "2034cc2db0bc4ecab2a094cc5238e1c3";
+dotenv.config();
+// console.log(dotenv.config())
+// console.log(process)
+
 const endpoint = "https://api.bing.microsoft.com/v7.0/images/visualsearch";
-
-const openai_key = "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";
 const endpoint_openai = 'https://api.openai.com/v1/images/generations';
+console.log('can you read this',process.env);
+const subscriptionKey = process.env.SUBSCRIPTION_KEY;
+const openai_key = process.env.OPENAI_API_KEY;
+
 // import api functions
 // const generatImg = require('');
 // const matchProd = require('');
 
 fashionAdvisorController.ImgGenService = async (req, res, next) => {
+  
 
   
     console.log('hi');
