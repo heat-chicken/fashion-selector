@@ -15,22 +15,37 @@ app.post('/api/genImage', (req, res) => {
   res.json({
     data: [
       {
-        url: "https://example.com/fake-image-1024x1024.jpg"
+        url: "https://images.unsplash.com/photo-1543076447-215ad9ba6923?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"
       }
     ]
   });
 });
 
-// testing get request for '/api/genImage' route
-app.post('/mockDalleImg', (req, res) => {
-  console.log('POST request received at /mockDalleImg');
-  res.json({
-    data: [
-      {
-        url: "https://example.com/fake-image-1024x1024.jpg"
-      }
-    ]
-  });
+// testing get request for '/api/bing' route
+app.post('/api/bing', (req, res) => {
+  console.log('POST request received at /api/bing');
+  res.json([
+    {
+      contentUrl: "https://images.unsplash.com/photo-1543076447-215ad9ba6923?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      hostPageUrl: "https://en.wikipedia.org/wiki/Goblin_shark"
+    },
+    {
+      contentUrl: "https://images.unsplash.com/photo-1543076447-215ad9ba6923?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      hostPageUrl: "https://en.wikipedia.org/wiki/Goblin_shark"
+    },
+    {
+      contentUrl: "https://images.unsplash.com/photo-1543076447-215ad9ba6923?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      hostPageUrl: "https://en.wikipedia.org/wiki/Goblin_shark"
+    },
+    {
+      contentUrl: "https://images.unsplash.com/photo-1543076447-215ad9ba6923?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      hostPageUrl: "https://en.wikipedia.org/wiki/Goblin_shark"
+    },
+    {
+      contentUrl: "https://images.unsplash.com/photo-1543076447-215ad9ba6923?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      hostPageUrl: "https://en.wikipedia.org/wiki/Goblin_shark"
+    }
+  ]);
 });
 
 

@@ -5,6 +5,7 @@ import React from 'react'; // import React from 'react to use JSX
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Import react router 
 
 import Search from './Search'; // import Search component
+import ShowImages from './ShowImages'; // import ShowImages component
 // import DisplayImage from './DisplayImage'; 
 // import StoreListings from './StoreListings'; 
 import InputForm from './InputForm'; 
@@ -17,7 +18,7 @@ function App() {
             <h1>App.jsx is running</h1>
         <Routes>
             <Route path="/" element={<Search />} />
-            {/* <Route path="/image" element={<DisplayImage />} /> */}
+            <Route path="/images" element={<ShowImages />} />
             {/* <Route path="/store" element={<StoreListings />} /> */}
         </Routes>
         </Router>
