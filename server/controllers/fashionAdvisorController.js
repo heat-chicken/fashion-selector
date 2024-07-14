@@ -7,7 +7,7 @@ dotenv.config();
 
 const endpoint = "https://api.bing.microsoft.com/v7.0/images/visualsearch";
 const endpoint_openai = 'https://api.openai.com/v1/images/generations';
-console.log('can you read this',process.env);
+// console.log('can you read this',process.env);
 const subscriptionKey = process.env.SUBSCRIPTION_KEY;
 const openai_key = process.env.OPENAI_API_KEY;
 
@@ -16,11 +16,13 @@ const openai_key = process.env.OPENAI_API_KEY;
 // const matchProd = require('');
 
 fashionAdvisorController.ImgGenService = async (req, res, next) => {
-  
+    // console.log(req.body)
 
   
-    console.log('hi');
     const { item, color, style } = req.body;
+
+
+  
     console.log(item, color, style);
   
     if (!item || !color || !style) {
