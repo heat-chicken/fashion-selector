@@ -19,12 +19,12 @@ function InputForm({ onImageGenerated }) {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Network response was not ok in InputForm.jsx handleSubmit');
       }
 
       const data = await response.json();
       console.log('data:', data);
-      onImageGenerated(data.image_url);
+      onImageGenerated(data.image_url, { item, color, style }); // item color and style are passed as an object to the onImageGenerated function so that it can be used in the Search component
     } catch (error) {
       console.error('Error:', error);
     }

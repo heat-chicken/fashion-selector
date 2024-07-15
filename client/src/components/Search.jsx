@@ -19,13 +19,13 @@ function Search() {
       const response = await fetch('/api/genImage', { // fetch request to the /api/genImage endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: currentPrompt }),
+        body: JSON.stringify({ item: currentPrompt.item, color: currentPrompt.color, style: currentPrompt.style }),
       });
 
-      if (!response.ok) throw new Error('Network response was not ok');
+      if (!response.ok) throw new Error('Network response was not ok on No button of Search.jsx');
 
       const data = await response.json();
-      handleImageGenerated(data.data[0].url, currentPrompt); // handleImageGenerated is a function that sets the currentImageUrl state
+      handleImageGenerated(data.image_url, currentPrompt); // handleImageGenerated is a function that sets the currentImageUrl state
     } catch (error) {
       console.error('Error:', error);
     }
@@ -39,7 +39,7 @@ function Search() {
         body: JSON.stringify({ imageUrl: currentImageUrl }),
       });
 
-      if (!response.ok) throw new Error('Network response was not ok');
+      if (!response.ok) throw new Error('Network response was not ok on Yes button of Search.jsxf');
 
       const data = await response.json();
       navigate('/images', { state: { images: data } });
