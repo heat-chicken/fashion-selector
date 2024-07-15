@@ -1,4 +1,4 @@
-// InputForm.jsx 
+// InputForm.jsx
 
 import React, { useState } from 'react';
 
@@ -36,20 +36,26 @@ function InputForm({ onImageGenerated }) {
         type="text"
         value={item}
         onChange={(e) => setItem(e.target.value)}
-        placeholder="Enter item"
+        placeholder="Item"
       />
+      <br />
+      <br />
       <input
         type="text"
         value={color}
         onChange={(e) => setColor(e.target.value)}
-        placeholder="Enter color"
+        placeholder="Color"
       />
+      <br />
+      <br />
       <input
         type="text"
         value={style}
         onChange={(e) => setStyle(e.target.value)}
-        placeholder="Enter style"
+        placeholder="Style"
       />
+      <br />
+      <br />
       <button type="submit">Generate Image</button>
     </form>
   );
