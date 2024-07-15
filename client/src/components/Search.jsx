@@ -2,12 +2,14 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // useNavigate is a hook that returns a navigate function to navigate to a different route
-import InputForm from './InputForm'; 
+import InputForm from './InputForm';
+import ShowImages from './ShowImages';
 
 function Search() {
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
   const [currentPrompt, setCurrentPrompt] = useState('');
-  const navigate = useNavigate(); 
+  const [bingData, setBingData] = useState('');
+  const navigate = useNavigate();
 
   const handleImageGenerated = (imageUrl, prompt) => {
     setCurrentImageUrl(imageUrl);
@@ -16,7 +18,8 @@ function Search() {
 
   const handleNoClick = async () => {
     try {
-      const response = await fetch('/api/genImage', { // fetch request to the /api/genImage endpoint
+      const response = await fetch('/api/genImage', {
+        // fetch request to the /api/genImage endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ item: currentPrompt.item, color: currentPrompt.color, style: currentPrompt.style }),
@@ -42,23 +45,40 @@ function Search() {
       if (!response.ok) throw new Error('Network response was not ok on Yes button of Search.jsxf');
 
       const data = await response.json();
-      navigate('/images', { state: { images: data } });
+      setBingData(data);
+      console.log(data);
+
+      // navigate('/images', { state: { images: data } });
     } catch (error) {
       console.error('Error in handleYesClick:', error);
     }
   };
 
   return (
-    <div>
-      <h1>Search Page</h1>
-      <InputForm onImageGenerated={handleImageGenerated} /> // InputForm component with onImageGenerated prop
-      {currentImageUrl && (
-        <div>
-          <img src={currentImageUrl} alt="Generated" />
-          <button onClick={handleNoClick}>No</button>  
-          <button onClick={handleYesClick}>Yes</button>
-        </div>
+    <div className="search-page pages">
+      <div>
+        <h1>Discover Your Style!</h1>
+        {/* // InputForm component with onImageGenerated prop */}
+        <InputForm onImageGenerated={handleImageGenerated} />
+        <br />
+        {currentImageUrl && (
+          <div>
+            <img
+              src={currentImageUrl}
+              alt="Generated"
+              className="generatedImg"
+            />
+            <button onClick={handleNoClick}>No</button>
+            <button onClick={handleYesClick}>Yes</button>
+          </div>
+        )}
+      </div>
+      {bingData ? (
+        <ShowImages bingData={bingData} />
+      ) : (
+        <div style={{ width: '400px' }}></div>
       )}
+      {/* {bingData && <ShowImages bingData={bingData} />} */}
     </div>
   );
 }
