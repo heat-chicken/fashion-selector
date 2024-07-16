@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // useNavigate is a hook that returns a navigate function to navigate to a different route
 import InputForm from './InputForm';
 import ShowImages from './ShowImages';
+import image from '../Assets/Images/image1.jpg';
 
 function Search() {
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
@@ -22,10 +23,17 @@ function Search() {
         // fetch request to the /api/genImage endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item: currentPrompt.item, color: currentPrompt.color, style: currentPrompt.style }),
+        body: JSON.stringify({
+          item: currentPrompt.item,
+          color: currentPrompt.color,
+          style: currentPrompt.style,
+        }),
       });
 
-      if (!response.ok) throw new Error('Network response was not ok on No button of Search.jsx');
+      if (!response.ok)
+        throw new Error(
+          'Network response was not ok on No button of Search.jsx'
+        );
 
       const data = await response.json();
       handleImageGenerated(data.image_url, currentPrompt); // handleImageGenerated is a function that sets the currentImageUrl state
@@ -42,7 +50,10 @@ function Search() {
         body: JSON.stringify({ imageUrl: currentImageUrl }),
       });
 
-      if (!response.ok) throw new Error('Network response was not ok on Yes button of Search.jsxf');
+      if (!response.ok)
+        throw new Error(
+          'Network response was not ok on Yes button of Search.jsxf'
+        );
 
       const data = await response.json();
       setBingData(data);
@@ -55,9 +66,16 @@ function Search() {
   };
 
   return (
-    <div className="search-page pages">
-      <div>
-        <h1>Discover Your Style!</h1>
+    <div
+      className="search-page pages"
+      style={{
+        display: 'flex',
+        justifyContent: 'space-around',
+        padding: '1rem 10rem',
+      }}
+    >
+      <div style={{ minWidth: '350px' }}>
+        <h1>Discover Your Style</h1>
         {/* // InputForm component with onImageGenerated prop */}
         <InputForm onImageGenerated={handleImageGenerated} />
         <br />
@@ -67,7 +85,9 @@ function Search() {
               src={currentImageUrl}
               alt="Generated"
               className="generatedImg"
+              height="300px"
             />
+            <br />
             <button onClick={handleNoClick}>No</button>
             <button onClick={handleYesClick}>Yes</button>
           </div>
@@ -76,7 +96,9 @@ function Search() {
       {bingData ? (
         <ShowImages bingData={bingData} />
       ) : (
-        <div style={{ width: '400px' }}></div>
+        <div style={{ width: '500px' }}>
+          <img src={image} style={{ width: '100%', marginLeft: '1rem' }} />
+        </div>
       )}
       {/* {bingData && <ShowImages bingData={bingData} />} */}
     </div>

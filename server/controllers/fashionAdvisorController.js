@@ -27,8 +27,6 @@ fashionAdvisorController.ImgGenService = async (req, res, next) => {
   }
 
   try {
-    // const fetch = (await import('node-fetch')).default;
-
     const prompt = `Generate an ecommerce product shot of item ${item}, in ${color} color, with ${style} style, with a white background. The product should be facing the front. It is a professional product shot. The generated image should be shown 100% inside the image borders. It should look similar to the existing products out in the market.`;
 
     const options = {

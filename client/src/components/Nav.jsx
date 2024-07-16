@@ -163,7 +163,7 @@ function ResponsiveAppBar() {
 }
 export default ResponsiveAppBar;
 
-// // Great first version from team: Seneyu 
+// // Great first version from team: Seneyu
 // const Nav = () => {
 //   return (
 //     <div className="navbar">
@@ -174,5 +174,3 @@ export default ResponsiveAppBar;
 //     </div>
 //   );
 // };
-
-
