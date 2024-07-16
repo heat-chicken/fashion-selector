@@ -2,6 +2,7 @@
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { lightTheme, darkTheme, customTheme } from './themes'; // Import the themes from the themes folder for Material-UI
 import App from './components/App.jsx';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
