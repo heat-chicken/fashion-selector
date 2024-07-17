@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // useNavigate is a hook that returns a navigate function to navigate to a different route
 import InputForm from './InputForm';
 import ShowImages from './ShowImages';
-import image from '../Assets/Images/image1.jpg';
 
 function Search() {
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
@@ -71,7 +70,8 @@ function Search() {
       style={{
         display: 'flex',
         justifyContent: 'space-around',
-        padding: '1rem 10rem',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        margin: '50px 80px',
       }}
     >
       <div style={{ minWidth: '350px' }}>
@@ -97,7 +97,7 @@ function Search() {
         <ShowImages bingData={bingData} />
       ) : (
         <div style={{ width: '500px' }}>
-          <img src={image} style={{ width: '100%', marginLeft: '1rem' }} />
+          {/* <img src={image} style={{ width: '100%', marginLeft: '1rem' }} /> */}
         </div>
       )}
       {/* {bingData && <ShowImages bingData={bingData} />} */}
