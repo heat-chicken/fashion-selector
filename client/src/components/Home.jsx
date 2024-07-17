@@ -96,13 +96,17 @@ const Item = ({ item, onClick }) => {
           alt="carousel"
           onClick={handleImageClick}
         />
-        {/* <Typography variant="h5">{item.photo}</Typography> */}
         <Typography variant="subtitle2">
           <a href={item.artist} target="_blank" rel="noopener noreferrer">
             {item.description}
           </a>
         </Typography>
-        <Button className="CheckButton" onClick={handleImageClick}>
+        <br />
+        <Button
+          variant="contained"
+          className="CheckButton"
+          onClick={handleImageClick}
+        >
           Discover Your Style!
         </Button>
       </Paper>

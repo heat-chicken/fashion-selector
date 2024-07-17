@@ -51,7 +51,7 @@ function Search() {
   };
 
   const handleYesClick = async () => {
-    setLoading_bing(true)
+    setLoading_bing(true);
     try {
       const response = await fetch('/api/bing', {
         method: 'POST',
@@ -65,7 +65,7 @@ function Search() {
         );
 
       const data = await response.json();
-      setLoading_bing(false)
+      setLoading_bing(false);
       setBingData(data);
       console.log(data);
 
@@ -88,7 +88,10 @@ function Search() {
       <div style={{ minWidth: '350px' }}>
         <h1>Discover Your Style</h1>
         {/* // InputForm component with onImageGenerated prop */}
-        <InputForm onImageGenerated={handleImageGenerated}  setCurrentImageUrl = {setCurrentImageUrl}/>
+        <InputForm
+          onImageGenerated={handleImageGenerated}
+          setCurrentImageUrl={setCurrentImageUrl}
+        />
         <br />
         {loading && <CircularProgress />}
         {currentImageUrl && (
@@ -112,9 +115,7 @@ function Search() {
           {/* <img src={image} style={{ width: '100%', marginLeft: '1rem' }} /> */}
         </div>
       )}
-      { loading_bing && (
-        <LinearProgress />
-      )}
+      {loading_bing && <LinearProgress />}
 
       {/* {bingData && <ShowImages bingData={bingData} />} */}
     </div>
