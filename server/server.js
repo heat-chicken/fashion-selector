@@ -29,8 +29,8 @@ app.post('/api/bing', fashionAdvisorController.matchService, (req, res) => {
 });
 
 // this should take the user to the first page
-app.get('/', (req, res) => {
-  console.log('get to the first page ');
+app.get('/search', (req, res) => {
+  console.log('get to the search page ');
   return res
     .status(200)
     .sendFile(path.join(__dirname, '../client/public/index.html'));

@@ -30,10 +30,17 @@ function Search() {
         // fetch request to the /api/genImage endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item: currentPrompt.item, color: currentPrompt.color, style: currentPrompt.style }),
+        body: JSON.stringify({
+          item: currentPrompt.item,
+          color: currentPrompt.color,
+          style: currentPrompt.style,
+        }),
       });
 
-      if (!response.ok) throw new Error('Network response was not ok on No button of Search.jsx');
+      if (!response.ok)
+        throw new Error(
+          'Network response was not ok on No button of Search.jsx'
+        );
 
       const data = await response.json();
       setLoading(false);
@@ -44,7 +51,7 @@ function Search() {
   };
 
   const handleYesClick = async () => {
-    setLoading_bing(true)
+    setLoading_bing(true);
     try {
       const response = await fetch('/api/bing', {
         method: 'POST',
@@ -52,10 +59,13 @@ function Search() {
         body: JSON.stringify({ imageUrl: currentImageUrl }),
       });
 
-      if (!response.ok) throw new Error('Network response was not ok on Yes button of Search.jsxf');
+      if (!response.ok)
+        throw new Error(
+          'Network response was not ok on Yes button of Search.jsxf'
+        );
 
       const data = await response.json();
-      setLoading_bing(false)
+      setLoading_bing(false);
       setBingData(data);
       console.log(data);
 
@@ -66,11 +76,22 @@ function Search() {
   };
 
   return (
-    <div className="search-page pages">
-      <div>
-        <h1>Discover Your Style!</h1>
+    <div
+      className="search-page pages"
+      style={{
+        display: 'flex',
+        justifyContent: 'space-around',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        margin: '50px 80px',
+      }}
+    >
+      <div style={{ minWidth: '350px' }}>
+        <h1>Discover Your Style</h1>
         {/* // InputForm component with onImageGenerated prop */}
-        <InputForm onImageGenerated={handleImageGenerated}  setCurrentImageUrl = {setCurrentImageUrl}/>
+        <InputForm
+          onImageGenerated={handleImageGenerated}
+          setCurrentImageUrl={setCurrentImageUrl}
+        />
         <br />
         {loading && <CircularProgress />}
         {currentImageUrl && (
@@ -79,7 +100,9 @@ function Search() {
               src={currentImageUrl}
               alt="Generated"
               className="generatedImg"
+              height="300px"
             />
+            <br />
             <button onClick={handleNoClick}>No</button>
             <button onClick={handleYesClick}>Yes</button>
           </div>
@@ -88,11 +111,11 @@ function Search() {
       {bingData ? (
         <ShowImages bingData={bingData} />
       ) : (
-        <div style={{ width: '400px' }}></div>
+        <div style={{ width: '500px' }}>
+          {/* <img src={image} style={{ width: '100%', marginLeft: '1rem' }} /> */}
+        </div>
       )}
-      { loading_bing && (
-        <LinearProgress />
-      )}
+      {loading_bing && <LinearProgress />}
 
       {/* {bingData && <ShowImages bingData={bingData} />} */}
     </div>

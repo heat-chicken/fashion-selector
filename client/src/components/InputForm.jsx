@@ -39,7 +39,9 @@ function InputForm({ onImageGenerated, setCurrentImageUrl }) {
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok in InputForm.jsx handleSubmit');
+        throw new Error(
+          'Network response was not ok in InputForm.jsx handleSubmit'
+        );
       }
 
       const data = await response.json();

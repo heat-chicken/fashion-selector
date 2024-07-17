@@ -16,15 +16,13 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
 
-
-const pages = ['Home', 'About', 'Login', 'Sign Up'];
+const pages = ['Home', 'Search', 'About', 'Login', 'Sign Up'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
-
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -34,18 +32,18 @@ function ResponsiveAppBar() {
   };
 
   const handleCloseNavMenu = (page) => {
-    console.log(page)
+    console.log(page);
     setAnchorElNav(null);
 
-    if (page == 'Login'){
-      navigate('/login')
+    if (page == 'Home') {
+      navigate('/');
     }
-    if (page == 'Home'){
-      navigate('/')
+    if (page == 'Search') {
+      navigate('/search');
     }
- 
-
-    
+    if (page == 'Login') {
+      navigate('/login');
+    }
   };
 
   const handleCloseUserMenu = () => {
@@ -134,7 +132,7 @@ function ResponsiveAppBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={()=>handleCloseNavMenu(page)}
+                onClick={() => handleCloseNavMenu(page)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -173,13 +171,12 @@ function ResponsiveAppBar() {
           </Box>
         </Toolbar>
       </Container>
-      
     </AppBar>
   );
 }
 export default ResponsiveAppBar;
 
-// // Great first version from team: Seneyu 
+// // Great first version from team: Seneyu
 // const Nav = () => {
 //   return (
 //     <div className="navbar">
@@ -190,5 +187,3 @@ export default ResponsiveAppBar;
 //     </div>
 //   );
 // };
-
-
