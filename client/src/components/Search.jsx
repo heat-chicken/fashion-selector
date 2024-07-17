@@ -6,6 +6,7 @@ import InputForm from './InputForm';
 import ShowImages from './ShowImages';
 
 import CircularProgress from '@mui/material/CircularProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 
 function Search() {
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
@@ -13,12 +14,12 @@ function Search() {
   const [bingData, setBingData] = useState('');
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [loading_bing, setLoading_bing] = useState(false);
 
   const handleImageGenerated = (imageUrl, prompt) => {
     setCurrentImageUrl(imageUrl);
     setCurrentPrompt(prompt);
     setLoading(false);
-
   };
 
   const handleNoClick = async () => {
@@ -43,6 +44,7 @@ function Search() {
   };
 
   const handleYesClick = async () => {
+    setLoading_bing(true)
     try {
       const response = await fetch('/api/bing', {
         method: 'POST',
@@ -53,6 +55,7 @@ function Search() {
       if (!response.ok) throw new Error('Network response was not ok on Yes button of Search.jsxf');
 
       const data = await response.json();
+      setLoading_bing(false)
       setBingData(data);
       console.log(data);
 
@@ -87,6 +90,10 @@ function Search() {
       ) : (
         <div style={{ width: '400px' }}></div>
       )}
+      { loading_bing && (
+        <LinearProgress />
+      )}
+
       {/* {bingData && <ShowImages bingData={bingData} />} */}
     </div>
   );
