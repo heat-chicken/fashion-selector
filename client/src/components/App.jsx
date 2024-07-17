@@ -11,6 +11,7 @@ import ShowImages from './ShowImages'; // import ShowImages component
 import Login from './Login'; // import Login component
 import InputForm from './InputForm';
 import SignUp from './SignUp';
+import About from './About';
 
 import backgroundImage from '../assets/images/background1.jpg';
 
@@ -54,6 +55,7 @@ function App() {
               <Route path="/search" element={<Search />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signUp" element={<SignUp />} />
+              <Route path="/about" element={<About />} />
             </Routes>
           </Router>
         </ContentContainer>
