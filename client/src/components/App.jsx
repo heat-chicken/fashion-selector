@@ -18,8 +18,9 @@ import Background from './Background';
 import customTheme from '../themes/customTheme';
 
 const ContentContainer = styled(Box)({
-  position: 'relative',
-  zIndex: 1,
+  position: 'relative', // position relative to allow z-index to work
+  zIndex: 1, // 1 unit above the default z-index
+  minHeight: '100vh', // 100% of the viewport height
 });
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
@@ -28,10 +29,12 @@ console.log('App.jsx is running');
 
 function App() {
   return (
-    <div>
+    <ThemeProvider theme={customTheme}>
+      <CssBaseline /> // CssBaseline component to reset CSS styles
 
-        <ContentContainer>
           <Router>
+            <ContentContainer>
+            <Background />
             <Nav />
             <Routes>
               <Route path="/" element={<Home />} />
@@ -40,10 +43,12 @@ function App() {
               <Route path="/signUp" element={<SignUp />} />
               <Route path="/about" element={<About />} />
             </Routes>
-          </Router>
-        </ContentContainer>
 
-    </div>
+            </ContentContainer>
+          </Router>
+
+
+    </ThemeProvider>
   );
 }
 
