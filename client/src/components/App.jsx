@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import CssBaseline from "@mui/material/CssBaseline";
 
 import Nav from './Nav';
 import Home from './Home';
@@ -14,14 +15,14 @@ import SignUp from './SignUp';
 import About from './About';
 import Background from './Background';
 
-import theme from '../themes/customTheme';
+import customTheme from '../themes/customTheme';
 
 const ContentContainer = styled(Box)({
   position: 'relative',
   zIndex: 1,
 });
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+
 
 console.log('App.jsx is running');
 
