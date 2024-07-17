@@ -5,18 +5,26 @@ import { useNavigate } from 'react-router-dom'; // useNavigate is a hook that re
 import InputForm from './InputForm';
 import ShowImages from './ShowImages';
 
+import CircularProgress from '@mui/material/CircularProgress';
+import LinearProgress from '@mui/material/LinearProgress';
+
 function Search() {
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
   const [currentPrompt, setCurrentPrompt] = useState('');
   const [bingData, setBingData] = useState('');
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [loading_bing, setLoading_bing] = useState(false);
 
   const handleImageGenerated = (imageUrl, prompt) => {
     setCurrentImageUrl(imageUrl);
     setCurrentPrompt(prompt);
+    setLoading(false);
   };
 
   const handleNoClick = async () => {
+    setCurrentImageUrl(null);
+    setLoading(true);
     try {
       const response = await fetch('/api/genImage', {
         // fetch request to the /api/genImage endpoint
@@ -35,6 +43,7 @@ function Search() {
         );
 
       const data = await response.json();
+      setLoading(false);
       handleImageGenerated(data.image_url, currentPrompt); // handleImageGenerated is a function that sets the currentImageUrl state
     } catch (error) {
       console.error('Error:', error);
@@ -42,6 +51,7 @@ function Search() {
   };
 
   const handleYesClick = async () => {
+    setLoading_bing(true)
     try {
       const response = await fetch('/api/bing', {
         method: 'POST',
@@ -55,6 +65,7 @@ function Search() {
         );
 
       const data = await response.json();
+      setLoading_bing(false)
       setBingData(data);
       console.log(data);
 
@@ -77,8 +88,9 @@ function Search() {
       <div style={{ minWidth: '350px' }}>
         <h1>Discover Your Style</h1>
         {/* // InputForm component with onImageGenerated prop */}
-        <InputForm onImageGenerated={handleImageGenerated} />
+        <InputForm onImageGenerated={handleImageGenerated}  setCurrentImageUrl = {setCurrentImageUrl}/>
         <br />
+        {loading && <CircularProgress />}
         {currentImageUrl && (
           <div>
             <img
@@ -100,6 +112,10 @@ function Search() {
           {/* <img src={image} style={{ width: '100%', marginLeft: '1rem' }} /> */}
         </div>
       )}
+      { loading_bing && (
+        <LinearProgress />
+      )}
+
       {/* {bingData && <ShowImages bingData={bingData} />} */}
     </div>
   );

@@ -36,6 +36,8 @@ const ContentContainer = styled(Box)({
   position: 'relative',
   zIndex: 1,
 });
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 console.log('App.jsx is running');
 
