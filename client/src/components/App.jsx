@@ -10,6 +10,7 @@ import Search from './Search'; // import Search component
 import ShowImages from './ShowImages'; // import ShowImages component
 import Login from './Login'; // import Login component
 import InputForm from './InputForm';
+import SignUp from './SignUp';
 
 import backgroundImage from '../assets/images/background1.jpg';
 
@@ -52,6 +53,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/search" element={<Search />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/signUp" element={<SignUp />} />
             </Routes>
           </Router>
         </ContentContainer>

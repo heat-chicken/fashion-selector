@@ -44,6 +44,9 @@ function ResponsiveAppBar() {
     if (page == 'Login') {
       navigate('/login');
     }
+    if (page == 'Sign Up') {
+      navigate('/signUp');
+    }
   };
 
   const handleCloseUserMenu = () => {
