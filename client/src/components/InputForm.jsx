@@ -1,13 +1,17 @@
 // InputForm.jsx
 
 import React, { useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 
-function InputForm({ onImageGenerated }) {
+function InputForm({ onImageGenerated, setCurrentImageUrl }) {
   const [item, setItem] = useState('');
   const [color, setColor] = useState('');
   const [style, setStyle] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
+    setCurrentImageUrl(null)
+    setLoading(true);
     event.preventDefault();
     try {
       const response = await fetch('/api/genImage', {
@@ -23,6 +27,7 @@ function InputForm({ onImageGenerated }) {
       }
 
       const data = await response.json();
+      setLoading(false);
       console.log('data:', data);
       onImageGenerated(data.image_url, { item, color, style }); // item color and style are passed as an object to the onImageGenerated function so that it can be used in the Search component
     } catch (error) {
@@ -57,7 +62,11 @@ function InputForm({ onImageGenerated }) {
       <br />
       <br />
       <button type="submit">Generate Image</button>
+      <br />
+      <br />
+      {loading && <CircularProgress />}
     </form>
+    
   );
 }
 

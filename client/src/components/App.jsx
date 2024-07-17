@@ -9,6 +9,8 @@ import Search from './Search'; // import Search component
 import ShowImages from './ShowImages'; // import ShowImages component
 import Login from './Login'; // import Login component
 import InputForm from './InputForm';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 console.log('App.jsx is running');
 
