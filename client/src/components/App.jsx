@@ -7,10 +7,8 @@ import Nav from "./Nav";
 import Search from "./Search";
 import Login from "./Login";
 
-// Import your background image
 import backgroundImage from "../assets/images/background1.jpg";
 
-// Create a styled component for the background
 const BackgroundBox = styled(Box)(({ theme }) => ({
   position: "relative",
   minHeight: "100vh",
@@ -30,7 +28,6 @@ const BackgroundBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-// Create a container for your content
 const ContentContainer = styled(Box)({
   position: "relative",
   zIndex: 1,
