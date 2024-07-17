@@ -5,13 +5,13 @@ import { createTheme } from '@mui/material/styles';
 const customTheme = createTheme({
   palette: {
     primary: {
-      main: '#000000',
+      main: '#111111',
     },
     secondary: {
       main: '#F5F5F5',
     },
     background: {
-      default: '#FFFFFF',
+      default: '#111111',
     },
   },
   typography: {
