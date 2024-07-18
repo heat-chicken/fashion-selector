@@ -26,14 +26,15 @@ function Search() {
     setCurrentImageUrl(null);
     setLoading(true);
     try {
-      const response = await fetch('/api/genImage', {
+      const response = await fetch("/api/genImage", {
         // fetch request to the /api/genImage endpoint
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           item: currentPrompt.item,
           color: currentPrompt.color,
           style: currentPrompt.style,
+          features: currentPrompt.features,
         }),
       });
 
