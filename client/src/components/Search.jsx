@@ -52,6 +52,7 @@ function Search() {
   };
 
   const handleYesClick = async () => {
+    setBingData('');
     setLoading_bing(true);
     try {
       const response = await fetch('/api/bing', {
