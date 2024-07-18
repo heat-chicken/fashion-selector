@@ -18,22 +18,27 @@ const openai_key = process.env.OPENAI_API_KEY;
 fashionAdvisorController.ImgGenService = async (req, res, next) => {
   // console.log(req.body)
 
-  const { item, color, style } = req.body;
+  const { item, color, style, features } = req.body;
 
-  console.log(item, color, style);
+  console.log(item, color, style, features);
 
-  if (!item || !color || !style) {
-    return res.status(400).json({ error: 'Item, color, or style is missing.' });
+  if (!item || !color || !style || !features) {
+    return res
+      .status(400)
+      .json({ error: "Item, color, style or features is missing." });
   }
 
   try {
-    const prompt = `Generate an ecommerce product shot of item ${item}, in ${color} color, with ${style} style, with a white background. The product should be facing the front. It is a professional product shot. The generated image should be shown 100% inside the image borders. It should look similar to the existing products out in the market.`;
+    const prompt = `Create an image of a ${style} ${item} in ${color} , 
+    featuring ${features}. The image should have a white background 
+    and the item should be facing the front. 
+    The item should be 100% within the image border.`;
 
     const options = {
-      method: 'POST',
+      method: "POST",
       headers: {
         Authorization: `Bearer ${openai_key}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         prompt: prompt,
@@ -41,7 +46,7 @@ fashionAdvisorController.ImgGenService = async (req, res, next) => {
       }),
     };
 
-    console.log('Options: ', options);
+    console.log("Options: ", options);
 
     const response = await fetch(endpoint_openai, options);
 
@@ -53,10 +58,10 @@ fashionAdvisorController.ImgGenService = async (req, res, next) => {
 
     res.json({ image_url });
   } catch (error) {
-    console.error('Dall E Image Generator Error: ', error);
+    console.error("Dall E Image Generator Error: ", error);
     res
       .status(500)
-      .json({ error: 'An error occurred on Dall E Image Generator.' });
+      .json({ error: "An error occurred on Dall E Image Generator." });
   }
 };
 
