@@ -14,6 +14,28 @@ import About from './About';
 import Background from './Background';
 
 import customTheme from '../themes/customTheme';
+import backgroundImage from '../assets/images/background1.jpg';
+
+
+const BackgroundBox = styled(Box)(({ theme }) => ({
+  position: 'relative',
+  minHeight: '100vh',
+  width: '100%',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundImage: `url(${backgroundImage})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    opacity: 0.5,
+    zIndex: -1,
+  },
+}));
+
 
 const ContentContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -23,6 +45,7 @@ const ContentContainer = styled(Box)(({ theme }) => ({
 }));
 
 console.log('App.jsx is running');
+
 
 function App() {
   return (
@@ -44,5 +67,6 @@ function App() {
     </ThemeProvider>
   );
 }
+
 
 export default App;
