@@ -1,15 +1,9 @@
-<<<<<<< HEAD
 // src/themes/customTheme.js
-=======
-// lightTheme.js
-
->>>>>>> dev
 import { createTheme } from '@mui/material/styles';
 
 const customTheme = createTheme({
   palette: {
     primary: {
-<<<<<<< HEAD
       main: '#000000', // Black
     },
     secondary: {
@@ -120,21 +114,3 @@ export default customTheme;
 // });
 
 // export default customTheme;
-=======
-      main: '#111111',
-    },
-    secondary: {
-      main: '#F5F5F5',
-    },
-    background: {
-      default: '#111111',
-    },
-  },
-  typography: {
-    fontFamily: 'Roboto, Arial, sans-serif',
-  },
-  // Add more customizations here
-});
-
-export default customTheme;
->>>>>>> dev

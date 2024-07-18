@@ -1,14 +1,8 @@
 // App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-<<<<<<< HEAD
 import { Box, CssBaseline } from '@mui/material';
 import { ThemeProvider, styled } from '@mui/material/styles';
-=======
-import { Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import CssBaseline from "@mui/material/CssBaseline";
->>>>>>> dev
 
 import Nav from './Nav';
 import Home from './Home';
@@ -20,7 +14,6 @@ import About from './About';
 import Background from './Background';
 
 import customTheme from '../themes/customTheme';
-<<<<<<< HEAD
 import backgroundImage from '../assets/images/background1.jpg';
 
 const BackgroundBox = styled(Box)(({ theme }) => ({
@@ -47,30 +40,12 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   zIndex: 1,
   padding: theme.spacing(2),
 }));
-=======
-
-const ContentContainer = styled(Box)({
-  position: 'relative', // position relative to allow z-index to work
-  zIndex: 1, // 1 unit above the default z-index
-  minHeight: '100vh', // 100% of the viewport height
-});
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-
-
-console.log('App.jsx is running');
->>>>>>> dev
 
 function App() {
   return (
     <ThemeProvider theme={customTheme}>
-<<<<<<< HEAD
-      <CssBaseline />
-      <BackgroundBox>
-        <ContentContainer>
-=======
       <CssBaseline /> // CssBaseline component to reset CSS styles
 
->>>>>>> dev
           <Router>
             <ContentContainer>
             <Background />
@@ -85,13 +60,8 @@ function App() {
 
             </ContentContainer>
           </Router>
-<<<<<<< HEAD
-        </ContentContainer>
-      </BackgroundBox>
-=======
 
 
->>>>>>> dev
     </ThemeProvider>
   );
 }
