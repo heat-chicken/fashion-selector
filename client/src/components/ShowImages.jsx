@@ -8,7 +8,7 @@ import {
 
 function ShowImages({ bingData }) {
   // validImages is an array and each ele is obj associate with every imgs plus new key isValid
-  // originally set all every pictures state as true 
+  // originally set every pictures state as true 
   const [validImages, setValidImages] = useState(bingData.map(image => ({ ...image, isValid: true })));
   console.log('validImg:', validImages)
   
