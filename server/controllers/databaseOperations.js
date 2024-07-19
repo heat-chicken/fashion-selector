@@ -65,6 +65,7 @@ module.exports = {
   getItemsFromDatabase,
 };
 
+// Run the test function if this file is executed directly
 if (require.main === module) {
   testDatabaseOperations().catch(console.error);
 }
