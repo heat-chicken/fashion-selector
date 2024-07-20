@@ -16,7 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
 
-const pages = ['Home', 'Search', 'About', 'Login', 'Sign Up'];
+const pages = ['Home', 'Search', 'About', 'Login', 'Sign Up','My Closet'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
@@ -35,21 +35,29 @@ function ResponsiveAppBar() {
     console.log(page);
     setAnchorElNav(null);
 
-    if (page == 'Home') {
-      navigate('/');
+    switch (page) {
+      case 'Home':
+        navigate('/');
+        break;
+      case 'Search':
+        navigate('/search');
+        break;
+      case 'Login':
+        navigate('/login');
+        break;
+      case 'Sign Up':
+        navigate('/signUp');
+        break;
+      case 'About':
+        navigate('/about');
+        break;
+      case 'My Closet':
+        navigate('/myCloset');
+        break;
+      default:
+        console.log('Unknown page:', page);
     }
-    if (page == 'Search') {
-      navigate('/search');
-    }
-    if (page == 'Login') {
-      navigate('/login');
-    }
-    if (page == 'Sign Up') {
-      navigate('/signUp');
-    }
-    if (page == 'About') {
-      navigate('/about');
-    }
+
   };
 
   const handleCloseUserMenu = () => {

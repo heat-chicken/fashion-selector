@@ -12,6 +12,7 @@ import Login from './Login';
 import SignUp from './SignUp';
 import About from './About';
 import Background from './Background';
+import MyCloset from './MyCloset'
 
 import customTheme from '../themes/customTheme';
 import backgroundImage from '../assets/images/background1.jpg';
@@ -61,6 +62,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<SignUp />} />
             <Route path="/about" element={<About />} />
+            <Route path="/myCloset" element={<MyCloset />} />
+        
           </Routes>
         </ContentContainer>
       </Router>
