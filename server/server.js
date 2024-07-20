@@ -43,30 +43,7 @@ app.use((req, res, next) => {
 // });
 
 
-//   the following two routers are useful when you don't want to make actual API calls but want to test front end
-// app.post(
-//   '/api/genImage',
 
-//   (req, res) => {
-//     console.log('serving image generater');
-//     image_url = 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883'
-//     return res.status(200).json({image_url});
-//   }
-// );
-
-// app.post('/api/bing',  (req, res) => {
-//   console.log('serving match generater');
-
-//   const result = [{        contentUrl: 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883',
-//     hostPageUrl: 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883',
-//     name: 'TEST1'}, {        contentUrl: 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883',
-//     hostPageUrl: 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883',
-//     name: 'TEST2'},{        contentUrl: 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883',
-//     hostPageUrl: 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883',
-//     name: 'TEST3'}]
-
-//   return res.status(200).json(result);
-// });
 
 
 app.post('/api/save', SB_func.insertItemsToDatabase  , (req, res) => {

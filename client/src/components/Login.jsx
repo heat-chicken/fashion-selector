@@ -65,12 +65,12 @@ export default function SignIn() {
     console.log(res)
     console.log('successfully logged in')
 
-    const response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-      headers: {
-          Authorization: `Bearer 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`
-      }
-    })
-    console.log(response)
+    // const response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
+    //   headers: {
+    //       Authorization: `Bearer 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`
+    //   }
+    // })
+    // console.log(response)
 
 
 
@@ -135,6 +135,7 @@ const onFailure = (res)=>{
               Sign In
             </Button>
             < GoogleLogin
+            id="google_btn"
             clientId={google_key}
             buttonText="Login"
             onSuccess={onSuccess}

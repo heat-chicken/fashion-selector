@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-
+/// This comp is no longer in use. refer Secret Closet instead
 const MyCloset = () => {
 
     const [savedImageUrls, setSavedImageUrls] = useState([]);

@@ -16,7 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
 
-const pages = ['Home', 'Search', 'About', 'Login', 'Sign Up','My Closet'];
+const pages = ['Home', 'Search', 'About', 'Login', 'Sign Up'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
