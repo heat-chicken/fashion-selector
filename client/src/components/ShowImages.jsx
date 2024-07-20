@@ -6,11 +6,13 @@ import {
   Typography,
 } from '@mui/material';
 
+import Button from '@mui/material/Button';
+
+
 function ShowImages({ bingData }) {
   // validImages is an array and each ele is obj associate with every imgs plus new key isValid
   // originally set every pictures state as true 
-  const [validImages, setValidImages] = useState(bingData.map(image => ({ ...image, isValid: true })));
-  console.log('validImg:', validImages)
+  const [validImages, setValidImages] = useState(bingData.map(image => ({ ...image, isValid: true, btnLabel: 'SAVE' })));
   
   // in case of broken img url
   const handleImageError = (index) => {
@@ -21,6 +23,35 @@ function ShowImages({ bingData }) {
       )
     );
   };
+  
+  const save = async (index, image) =>{
+
+        setValidImages((prevImages) =>
+    prevImages.map((image, i) =>
+      i === index ? { ...image, btnLabel: 'SAVED!'} : image
+
+    )
+  );
+
+    // const itemsToInsert = simplifiedData.map(item => ({ url: item.contentUrl }));    
+    const itemsToInsert = [{url: image.contentUrl }]
+    //await insertItemsToDatabase(itemsToInsert);
+
+    const response = await fetch('/api/save', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(itemsToInsert),
+    });
+    
+
+    
+
+
+
+  }
+
 
   return (
     <div>
@@ -79,7 +110,9 @@ function ShowImages({ bingData }) {
                     }
                     position="below"
                   />
-                </a>
+                  </a>
+                  <Button variant="contained" onClick={() => save(index, image)}>{image.btnLabel}</Button>
+                
               </ImageListItem>
             )
           ))}

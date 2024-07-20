@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageFetcher from './ImageFetcher';
 import Carousel from 'react-material-ui-carousel';
 import { Paper, Button, Typography, Grid } from '@mui/material';
@@ -9,9 +9,29 @@ const SecretCloset = () => {
   const [items, setItems] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const updateItems = (newItems) => {
-    setItems(newItems);
+  const getImages = async () => {
+    try {
+      const response = await fetch('/api/getsaveImg');
+      const data = await response.json();
+      setItems(data);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  // delete function not working currently 
+  // const deleteImage = async (id) => {
+  //   try {
+  //     await fetch(`/api/deleteImage/${id}`, { method: 'DELETE' });
+  //     setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  useEffect(() => {
+    getImages();
+  }, []);
 
   const handlePrev = () => {
     setActiveIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : items.length - 1));
@@ -23,7 +43,6 @@ const SecretCloset = () => {
 
   return (
     <Grid container spacing={2} style={{ backgroundColor: 'transparent', margin: '15px' }}>
-      <ImageFetcher updateItems={updateItems} />
       {items.length > 0 && (
         <>
           <Grid item xs={2}>
@@ -43,6 +62,7 @@ const SecretCloset = () => {
             >
               {items.map((item, index) => (
                 <Item key={index} item={item} />
+                //<Item key={index} item={item} deleteImage={deleteImage} />
               ))}
             </Carousel>
             <Button onClick={handlePrev} style={{ position: 'absolute', left: '10px', top: '50%' }}>
@@ -69,7 +89,7 @@ const SideImages = ({ items, start, end }) => {
       {[start, start + 1, end].map((index) => (
         <img
           key={index}
-          src={items[getWrappedIndex(index)].photo}
+          src={items[getWrappedIndex(index)].url}
           alt={`Side item ${index}`}
           style={{ width: '100%', height: 'auto', marginBottom: '10px' }}
         />
@@ -78,19 +98,27 @@ const SideImages = ({ items, start, end }) => {
   );
 };
 
-const Item = ({ item }) => {
+const Item = ({ item}) => {
   return (
     <div className="home pages" style={{ backgroundColor: 'transparent', textAlign: 'center', padding: '1rem' }}>
       <Paper style={{ position: 'relative', margin: '10px', backgroundColor: 'rgba(255, 255, 255, 0.5)', padding: '1rem' }}>
         <img
-          src={item.photo}
+          src={item.url}
           style={{ height: '400px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
-          alt={item.description}
+          alt='saved pic'
         />
+        {/* <Button
+          onClick={() => deleteImage(item.id)}
+          style={{ position: 'absolute', top: '10px', right: '10px' }}
+          variant="contained"
+          color="secondary"
+        >
+          Delete
+        </Button> */}
         <Typography variant="subtitle2">
-          <a href={item.artist} target="_blank" rel="noopener noreferrer">
+          {/* <a href={item.artist} target="_blank" rel="noopener noreferrer">
             {item.description}
-          </a>
+          </a> */}
         </Typography>
       </Paper>
     </div>

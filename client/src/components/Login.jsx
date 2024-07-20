@@ -16,6 +16,13 @@ import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
+import { GoogleLogin } from '@react-oauth/google';
+// import { GoogleLogin } from 'react-google-login';
+import {useEffect} from 'react';
+
+const google_key = process.env.CLIENT_ID;
+
+
 
 function Copyright(props) {
   return (
@@ -35,6 +42,9 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+
+
+
   const navigate = useNavigate(); // remember! react hooks are generally called at the top level of our component function, not inside of event handlers. scope is the key to understanding here.
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -49,6 +59,29 @@ export default function SignIn() {
         navigate('/secretCloset');
     }
   };
+ 
+  
+  const onSuccess = async (res)=>{
+    console.log(res)
+    console.log('successfully logged in')
+
+    // const response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
+    //   headers: {
+    //       Authorization: `Bearer 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`
+    //   }
+    // })
+    // console.log(response)
+
+
+
+
+    navigate('/SecretCloset');
+    //res.redirect('/home')
+}
+
+const onFailure = (res)=>{
+    console.log('fail', res)
+}
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -101,6 +134,15 @@ export default function SignIn() {
             >
               Sign In
             </Button>
+            < GoogleLogin
+            id="google_btn"
+            clientId={google_key}
+            buttonText="Login"
+            onSuccess={onSuccess}
+            onFailure={onFailure}
+            // cookiePolicy={'single_host_origin'}
+            // isSignedIn={true}
+            />
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -117,12 +159,14 @@ export default function SignIn() {
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
+  
+            
     </ThemeProvider>
   );
 }
 
 
-
+// onSuccess={responseMessage} onError={errorMessage} 
 // const Login = () => {
 //   return (
 //     <div className="pages">
