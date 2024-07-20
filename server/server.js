@@ -91,6 +91,23 @@ app.get('/search', (req, res) => {
     .sendFile(path.join(__dirname, '../client/public/index.html'));
 });
 
+app.delete('/api/deleteImage/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const { error } = await supabase
+      .from('images')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+
+    res.status(200).send({ message: 'Image deleted successfully' });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
 /**
  * 404 handler
  */

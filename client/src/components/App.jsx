@@ -101,7 +101,7 @@ const onFailure = (res)=>{
             <Route path="/signUp" element={<SignUp />} />
             <Route path="/about" element={<About />} />
             <Route path="/secretCloset" element={<SecretCloset />} />
-            <Route path="/myCloset" element={<MyCloset />} />
+           
         
           </Routes>
         </ContentContainer>
@@ -114,3 +114,5 @@ const onFailure = (res)=>{
 
 
 export default App;
+
+//  <Route path="/myCloset" element={<MyCloset />} />
