@@ -1,0 +1,1 @@
+import fashionAdvisorController from './fashionAdvisorController';
