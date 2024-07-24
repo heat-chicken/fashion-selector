@@ -14,6 +14,7 @@ import About from './About';
 import Background from './Background';
 import SecretCloset from './SecretCloset';
 import MyCloset from './MyCloset'
+import Upload from './Upload';
 
 import customTheme from '../themes/customTheme';
 import backgroundImage from '../assets/images/background1.jpg';
@@ -101,6 +102,7 @@ const onFailure = (res)=>{
             <Route path="/signUp" element={<SignUp />} />
             <Route path="/about" element={<About />} />
             <Route path="/secretCloset" element={<SecretCloset />} />
+            <Route path="/upload" element={<Upload />} />
            
         
           </Routes>
