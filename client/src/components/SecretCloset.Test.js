@@ -1,0 +1,1 @@
+import SecretCloset from './SecretCloset';

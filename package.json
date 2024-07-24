@@ -4,7 +4,7 @@
   "description": "",
   "main": ".client/src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "webpack --mode production",
     "start": "webpack --mode production && node server/server.js",
     "dev": "concurrently \"nodemon server/server.js\" \"webpack serve --mode development --open\""
@@ -24,6 +24,7 @@
     "css-minimizer-webpack-plugin": "^7.0.0",
     "dotenv-webpack": "^8.1.0",
     "html-webpack-plugin": "^5.6.0",
+    "jest": "^29.7.0",
     "process": "^0.11.10",
     "style-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.3.10",
