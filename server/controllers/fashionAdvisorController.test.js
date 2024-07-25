@@ -1,1 +1,1 @@
-import fashionAdvisorController from './fashionAdvisorController';
+const fashionAdvisorController = require('./fashionAdvisorController');

@@ -1,1 +1,1 @@
-import SB_func from './imgSave';
+const SB_func = require('./imgSave');

@@ -1,9 +1,9 @@
-import {insertItemsToDatabase, getItemsFromDatabase} from './databaseOperations';
-import {supabase} from '../../mocks/mockSupabaseClient';
+const { insertItemsToDatabase, getItemsFromDatabase }= require('./databaseOperations');
+const supabase = require('../../mocks/mockSupabaseClient');
 
 //insertItemsToDatabase - lines 8 - 20
 
-jest.mock('./supabaseClient'); // Adjust the path as necessary
+jest.mock('../../mocks/mockSupabaseClient'); // Adjust the path as necessary
 
 describe('insertItemsToDatabase', () => {
   afterEach(() => {

@@ -6,4 +6,4 @@ const from = jest.fn(() => ({
   
   const supabase = { from };
   
-  export { supabase };
+module.exports = supabase;

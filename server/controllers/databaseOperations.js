@@ -2,7 +2,7 @@ const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
 
 const supabaseUrl = "https://zztxrkhfcilrdciqdsqn.supabase.co";
-const supabaseKey = process.env.SUPABASE_KEY;
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjcnZ0cXd6Zm90YXlsdXlyb2NkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjE3ODM3MTIsImV4cCI6MjAzNzM1OTcxMn0.zxekPPNTYvdcDSkvGdlmPKmjt_jIfjq3AqvNG14RbNU';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function insertItemsToDatabase(items) {

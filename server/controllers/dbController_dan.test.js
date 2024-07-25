@@ -1,1 +1,1 @@
-import dbController from './dbController_dan';
+const dbController = require('./dbController_dan');
