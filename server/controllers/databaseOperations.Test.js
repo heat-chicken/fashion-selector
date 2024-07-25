@@ -1,1 +1,0 @@
-import {insertItemsToDatabase, getItemsFromDatabase} from './databaseOperations';
