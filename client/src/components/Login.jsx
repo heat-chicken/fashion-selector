@@ -15,18 +15,19 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
 import { GoogleLogin } from '@react-oauth/google';
-// import { GoogleLogin } from 'react-google-login';
-import {useEffect} from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 const google_key = process.env.CLIENT_ID;
 
-
-
 function Copyright(props) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
         Your Website
@@ -42,9 +43,6 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-
-
-
   const navigate = useNavigate(); // remember! react hooks are generally called at the top level of our component function, not inside of event handlers. scope is the key to understanding here.
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -52,36 +50,30 @@ export default function SignIn() {
     console.log({
       email: data.get('email'),
       password: data.get('password'),
-      
     });
-    if(data.get('email') === 'yoshi@gmail.com' && data.get('password') === 'cats'){
+    if (
+      data.get('email') === 'yoshi@gmail.com' &&
+      data.get('password') === 'cats'
+    ) {
       console.log('Login successful');
-        navigate('/secretCloset');
+      navigate('/secretCloset');
     }
   };
- 
-  
-  const onSuccess = async (res)=>{
-    console.log(res)
-    console.log('successfully logged in')
 
-    // const response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-    //   headers: {
-    //       Authorization: `Bearer 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`
-    //   }
-    // })
-    // console.log(response)
-
-
-
+  const onSuccess = async (res) => {
+    const userDetails = jwtDecode(res.credential);
+    const email = userDetails.email;
+    const firstName = userDetails.given_name;
+    const lastName = userDetails.family_name;
+    const avatar = userDetails.picture;
+    console.log('successfully logged in');
 
     navigate('/SecretCloset');
-    //res.redirect('/home')
-}
+  };
 
-const onFailure = (res)=>{
-    console.log('fail', res)
-}
+  const onFailure = (res) => {
+    console.log('fail', res);
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -101,7 +93,12 @@ const onFailure = (res)=>{
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
@@ -134,14 +131,14 @@ const onFailure = (res)=>{
             >
               Sign In
             </Button>
-            < GoogleLogin
-            id="google_btn"
-            clientId={google_key}
-            buttonText="Login"
-            onSuccess={onSuccess}
-            onFailure={onFailure}
-            // cookiePolicy={'single_host_origin'}
-            // isSignedIn={true}
+            <GoogleLogin
+              id="google_btn"
+              clientId={google_key}
+              buttonText="Login"
+              onSuccess={onSuccess}
+              onFailure={onFailure}
+              // cookiePolicy={'single_host_origin'}
+              // isSignedIn={true}
             />
             <Grid container>
               <Grid item xs>
@@ -159,47 +156,6 @@ const onFailure = (res)=>{
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
-  
-            
     </ThemeProvider>
   );
 }
-
-
-// onSuccess={responseMessage} onError={errorMessage} 
-// const Login = () => {
-//   return (
-//     <div className="pages">
-//       <h1>Welcome to Login</h1>
-//       <p>Please login to continue.</p>
-//       <form>
-//         <TextField
-//           id="usernmae_text_box"
-//           // defaultValue="hi"
-//           label="username" 
-//           //value={username}
-//           // onChange={(e) => setItem(e.target.value)}
-//           //error={errors.item}
-//           //helperText={errors.item ? 'Item is required' : ''}
-//         />
-//         <br />
-//         <br />
-//         <TextField
-        
-//         id="password_text_box"
-//         // defaultValue="hi"
-//         label="password" 
-//         //value={password}
-//         // onChange={(e) => setItem(e.target.value)}
-//         //error={errors.item}
-//         //helperText={errors.item ? 'Item is required' : ''}
-//       />
-//         <br />
-//         <br />
-//         <Button variant="contained" type="submit">Submit</Button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Login;
