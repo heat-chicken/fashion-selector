@@ -1,18 +1,157 @@
-import React, { useState } from 'react';
-import { Stage, Layer, Rect, Circle } from 'react-konva';
+import React, { useState, useRef } from 'react';
+import { Stage, Layer, Rect, Circle, Image, Line } from 'react-konva';
+import useImage from 'use-image';
+import { Button, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
-const KidPix = () => {
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
+const KidPix = ({imageUpload, setImageUpload}) => {
+
+  //image uploading code
+  const [imgUrlState, updateImgUrl] = useState();
+
+  const handleImageUpload = (e) => {
+    updateImgUrl(URL.createObjectURL(e.target.files[0]));
+  };
+
+  const [image] = useImage(imgUrlState);
+
+  //drawing code
+  const [tool, setTool] = useState('eraser');
+  const [lines, setLines] = useState([]);
+  const isDrawing = useRef(false);
+
+  const handleMouseDown = (e) => {
+    isDrawing.current = true;
+    const pos = e.target.getStage().getPointerPosition();
+    setLines([...lines, { tool, points: [pos.x, pos.y] }]);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDrawing.current) {
+      return;
+    }
+
+    const stage = e.target.getStage();
+    const point = stage.getPointerPosition();
+    let lastLine = lines[lines.length - 1];
+    lastLine.points = lastLine.points.concat([point.x, point.y]);
+
+    lines.splice(lines.length - 1, 1, lastLine);
+    setLines(lines.concat());
+  };
+
+  const handleMouseUp = () => {
+    isDrawing.current = false;
+  };
+
+  //saving/sending code
+  const imgRef = useRef(null);
+
+  const handleExport = () => {
+
+    setImageUpload(imgRef.current.toDataURL());
+
+    downloadURI(imageUpload)
+
+  }
+
+  function downloadURI(uri, name) {
+    var link = document.createElement('a');
+    link.download = name;
+    link.href = uri;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   return (
     // Stage - is a div wrapper
     // Layer - is an actual 2d canvas element, so you can have several layers inside the stage
     // Rect and Circle are not DOM elements. They are 2d shapes on canvas
-    <div>
-      <h1>Kid Pix goes here.</h1>
-      <Stage width={window.innerWidth} height={window.innerHeight}>
-        <Layer>
-          <Rect width={50} height={50} fill='red' />
-          <Circle x={200} y={200} stroke='black' radius={50} />
+    <div
+      style={{
+        margin: '50px 80px',
+        width: '300px',
+      }}
+    >
+      <div>
+        <Button
+          component='label'
+          role={undefined}
+          variant='contained'
+          style={{
+            width: '120px',
+          }}
+        >
+          Upload
+          <VisuallyHiddenInput type='file' onChange={handleImageUpload} />
+        </Button>
+        <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
+          <InputLabel>Tool</InputLabel>
+          <Select
+            labelId="tool-select-label"
+            id="tool-select"
+            value={tool}
+            label="Tool"
+            onChange={(e) => {
+              setTool(e.target.value);
+            }}
+          >
+            <MenuItem value='pen'>Pen</MenuItem>
+            <MenuItem value='eraser'>Eraser</MenuItem>
+          </Select>
+        </FormControl>
+        <Button
+          component='label'
+          role={undefined}
+          variant='contained'
+          tabIndex={2}
+          style={{
+            width: '120px',
+          }}
+          onClick = {handleExport}
+        >
+          Export
+        </Button>
+      </div>
+      <Stage
+        width={512}
+        height={512}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      >
+        <Layer ref={imgRef} >
+          <Image  image={image}  draggable = {true}/>
+          {lines.map((line, i) => (
+            <Line
+              key={i}
+              points={line.points}
+              stroke='#ff00ff'
+              strokeWidth={20}
+              tension={0.5}
+              lineCap='round'
+              lineJoin='round'
+             
+              globalCompositeOperation={
+                line.tool === 'eraser' ? 'destination-out' : 'source-over'
+              }
+            />
+          ))}
         </Layer>
+        <Layer opacity={0.4}></Layer>
       </Stage>
     </div>
   );

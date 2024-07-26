@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // useNavigate is a hook that returns a navigate function to navigate to a different route
-import InputForm from './InputForm';
+import ImageForm from './ImageForm';
 import ShowImages from './ShowImages';
 import KidPix from './KidPix';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -15,6 +15,7 @@ function Upload() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loading_bing, setLoading_bing] = useState(false);
+  const [imageUpload, setImageUpload] = useState();
 
   const handleImageGenerated = (imageUrl, prompt) => {
     setCurrentImageUrl(imageUrl);
@@ -26,10 +27,10 @@ function Upload() {
     setCurrentImageUrl(null);
     setLoading(true);
     try {
-      const response = await fetch("/api/genImage", {
+      const response = await fetch('/api/genImage', {
         // fetch request to the /api/genImage endpoint
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           item: currentPrompt.item,
           color: currentPrompt.color,
@@ -79,19 +80,21 @@ function Upload() {
 
   return (
     <div
-      className="search-page pages"
+      className='search-page pages'
       style={{
         display: 'flex',
         backgroundColor: 'rgba(255, 255, 255, 0.5)',
         margin: '50px 80px',
+        justifyContent: 'space-around',
       }}
     >
       <div style={{ minWidth: '350px' }}>
         <h1>Discover Your Style</h1>
         {/* // InputForm component with onImageGenerated prop */}
-        <InputForm
+        <ImageForm
           onImageGenerated={handleImageGenerated}
           setCurrentImageUrl={setCurrentImageUrl}
+          imageUpload={imageUpload}
         />
         <br />
         {loading && <CircularProgress />}
@@ -99,9 +102,9 @@ function Upload() {
           <div>
             <img
               src={currentImageUrl}
-              alt="Generated"
-              className="generatedImg"
-              height="300px"
+              alt='Generated'
+              className='generatedImg'
+              height='300px'
             />
             <br />
             <button onClick={handleNoClick}>No</button>
@@ -110,12 +113,12 @@ function Upload() {
         )}
       </div>
 
-      <KidPix />
+      <KidPix setImageUpload={setImageUpload} imageUpload={imageUpload} />
 
       {bingData ? (
         <ShowImages bingData={bingData} />
       ) : (
-        <div style={{ width: '500px' }}>
+        <div>
           {/* <img src={image} style={{ width: '100%', marginLeft: '1rem' }} /> */}
         </div>
       )}

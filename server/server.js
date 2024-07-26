@@ -6,6 +6,8 @@ const PORT = 3003;
 const bodyParser = require('body-parser');
 const fs = require('fs');
 
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
 
 const fashionAdvisorController = require('./controllers/fashionAdvisorController');
 const SB_func  = require('./controllers/imgSave')
@@ -44,7 +46,10 @@ app.use((req, res, next) => {
 
 
 
-
+// app.post('/test', (req, res, next)=>{
+//   setTimeout(()=>console.log(req), 100);
+//   res.sendStatus(600)
+// })
 
 app.post('/api/save', SB_func.insertItemsToDatabase  , (req, res) => {
 
@@ -55,7 +60,7 @@ app.post('/api/save', SB_func.insertItemsToDatabase  , (req, res) => {
 
 app.get('/api/getsaveImg', SB_func.getSavedImg  , (req, res) => {
 
-  console.log('serving gettinng saved images');
+  console.log('serving getting saved images');
 
   return res.status(200);
 })
@@ -65,7 +70,7 @@ app.post(
   '/api/genImage',
   fashionAdvisorController.ImgGenService,
   (req, res) => {
-    console.log('serving image generater');
+    console.log('serving image generator');
 
     return res.status(200);
   }
@@ -75,6 +80,17 @@ app.post('/api/refineGenImage', (req, res) => {
   console.log('refining generated image');
   return res.status(200);
 });
+
+app.post(
+  '/api/editImage',
+  upload.single('uploadImage'),
+  fashionAdvisorController.ImgEditService,
+  (req, res) => {
+    console.log('serving image editor');
+
+    return res.status(200).send("editImage express route hit");
+  }
+);
 
 app.post('/api/bing', fashionAdvisorController.matchService, (req, res) => {
   console.log('serving match generater');
