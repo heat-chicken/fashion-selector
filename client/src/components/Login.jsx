@@ -65,7 +65,6 @@ export default function SignIn() {
     const email = userDetails.email;
     const firstName = userDetails.given_name;
     const lastName = userDetails.family_name;
-    const avatar = userDetails.picture;
     console.log('successfully logged in');
 
     navigate('/SecretCloset');
@@ -93,6 +92,15 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          <div className="oauth">
+            <GoogleLogin
+              className="oauth"
+              onSuccess={onSuccess}
+              onError={onFailure}
+              width="500px"
+            />
+          </div>
+          or
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -131,15 +139,6 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <GoogleLogin
-              id="google_btn"
-              clientId={google_key}
-              buttonText="Login"
-              onSuccess={onSuccess}
-              onFailure={onFailure}
-              // cookiePolicy={'single_host_origin'}
-              // isSignedIn={true}
-            />
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
