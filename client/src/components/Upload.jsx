@@ -1,6 +1,6 @@
 // Search.jsx
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom'; // useNavigate is a hook that returns a navigate function to navigate to a different route
 import ImageForm from './ImageForm';
 import ShowImages from './ShowImages';
@@ -16,6 +16,7 @@ function Upload() {
   const [loading, setLoading] = useState(false);
   const [loading_bing, setLoading_bing] = useState(false);
   const [imageUpload, setImageUpload] = useState();
+  const imgRef = useRef(null);
 
   const handleImageGenerated = (imageUrl, prompt) => {
     setCurrentImageUrl(imageUrl);
@@ -77,6 +78,7 @@ function Upload() {
       console.error('Error in handleYesClick:', error);
     }
   };
+  console.log(imgRef.current)
 
   return (
     <div
@@ -95,6 +97,7 @@ function Upload() {
           onImageGenerated={handleImageGenerated}
           setCurrentImageUrl={setCurrentImageUrl}
           imageUpload={imageUpload}
+          imgRef={imgRef}
         />
         <br />
         {loading && <CircularProgress />}
@@ -113,7 +116,7 @@ function Upload() {
         )}
       </div>
 
-      <KidPix setImageUpload={setImageUpload} imageUpload={imageUpload} />
+      <KidPix setImageUpload={setImageUpload} imageUpload={imageUpload} imgRef={imgRef} />
 
       {bingData ? (
         <ShowImages bingData={bingData} />

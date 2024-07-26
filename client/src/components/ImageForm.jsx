@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-function ImageForm({ onImageGenerated, setCurrentImageUrl, imageUpload }) {
+function ImageForm({ onImageGenerated, setCurrentImageUrl, imageUpload, imgRef }) {
   const [item, setItem] = useState('');
   const [color, setColor] = useState('');
   const [style, setStyle] = useState('');
@@ -37,12 +37,14 @@ function ImageForm({ onImageGenerated, setCurrentImageUrl, imageUpload }) {
     setLoading(true);
     event.preventDefault();
 
+    const uploadImage = imgRef.current.toDataURL();
+
     const formData = new FormData();
     formData.append(
       'textInput',
       JSON.stringify({ item, color, style, features })
     );
-    formData.append('uploadImage', imageUpload);
+    formData.append('uploadImage', uploadImage);
 
     try {
       const response = await fetch('/api/editImage', {

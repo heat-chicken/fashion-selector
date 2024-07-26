@@ -16,7 +16,7 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-const KidPix = ({imageUpload, setImageUpload}) => {
+const KidPix = ({imageUpload, setImageUpload, imgRef}) => {
 
   //image uploading code
   const [imgUrlState, updateImgUrl] = useState();
@@ -56,25 +56,16 @@ const KidPix = ({imageUpload, setImageUpload}) => {
     isDrawing.current = false;
   };
 
-  //saving/sending code
-  const imgRef = useRef(null);
 
-  const handleExport = () => {
 
-    setImageUpload(imgRef.current.toDataURL());
-
-    downloadURI(imageUpload)
-
-  }
-
-  function downloadURI(uri, name) {
-    var link = document.createElement('a');
-    link.download = name;
-    link.href = uri;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
+  // function downloadURI(uri, name) {
+  //   var link = document.createElement('a');
+  //   link.download = name;
+  //   link.href = uri;
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // }
 
   return (
     // Stage - is a div wrapper
@@ -113,18 +104,6 @@ const KidPix = ({imageUpload, setImageUpload}) => {
             <MenuItem value='eraser'>Eraser</MenuItem>
           </Select>
         </FormControl>
-        <Button
-          component='label'
-          role={undefined}
-          variant='contained'
-          tabIndex={2}
-          style={{
-            width: '120px',
-          }}
-          onClick = {handleExport}
-        >
-          Export
-        </Button>
       </div>
       <Stage
         width={512}
@@ -134,7 +113,8 @@ const KidPix = ({imageUpload, setImageUpload}) => {
         onMouseUp={handleMouseUp}
       >
         <Layer ref={imgRef} >
-          <Image  image={image}  draggable = {true}/>
+          <Image  image={image}  width={512}
+        height={512}/>
           {lines.map((line, i) => (
             <Line
               key={i}
