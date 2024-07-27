@@ -1,1 +1,0 @@
-import SignUp from './SignUp';

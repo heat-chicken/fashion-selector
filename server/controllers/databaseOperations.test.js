@@ -1,9 +1,8 @@
-const { insertItemsToDatabase, getItemsFromDatabase }= require('./databaseOperations');
-const supabase = require('../../mocks/mockSupabaseClient');
+// insertItemsToDatabase.test.js
+const mSupabase = require('../../__mocks__/mockSupabaseClient'); // Adjust the path as necessary
+const { insertItemsToDatabase } = require('./databaseOperations'); // Adjust the path as necessary
 
-//insertItemsToDatabase - lines 8 - 20
-
-jest.mock('../../mocks/mockSupabaseClient'); // Adjust the path as necessary
+jest.mock('../../__mocks__/mockSupabaseClient'); // Adjust the path as necessary
 
 describe('insertItemsToDatabase', () => {
   afterEach(() => {
@@ -16,7 +15,7 @@ describe('insertItemsToDatabase', () => {
       data: items,
       error: null,
     }));
-    supabase.from.mockReturnValue({
+    mSupabase.from.mockReturnValue({
       insert: jest.fn(() => ({
         select: mockSelect,
       })),
@@ -24,12 +23,12 @@ describe('insertItemsToDatabase', () => {
 
     console.log = jest.fn();
 
-    await insertItemsToDatabase(items);
+    await insertItemsToDatabase(items, mSupabase);
 
     expect(console.log).toHaveBeenCalledWith('1 items inserted successfully');
-    expect(supabase.from).toHaveBeenCalledWith('item');
-    expect(supabase.from().insert).toHaveBeenCalledWith(items);
-    expect(supabase.from().insert().select).toHaveBeenCalled();
+    expect(mSupabase.from).toHaveBeenCalledWith('item');
+    expect(mSupabase.from().insert).toHaveBeenCalledWith(items);
+    expect(mSupabase.from().insert().select).toHaveBeenCalled();
   });
 
   it('should log an error message on insertion error', async () => {
@@ -38,7 +37,7 @@ describe('insertItemsToDatabase', () => {
       data: null,
       error: { message: 'Insertion error' },
     }));
-    supabase.from.mockReturnValue({
+    mSupabase.from.mockReturnValue({
       insert: jest.fn(() => ({
         select: mockSelect,
       })),
@@ -46,27 +45,28 @@ describe('insertItemsToDatabase', () => {
 
     console.error = jest.fn();
 
-    await insertItemsToDatabase(items);
+    await insertItemsToDatabase(items, mSupabase);
 
     expect(console.error).toHaveBeenCalledWith('Error inserting items:', 'Insertion error');
-    expect(supabase.from).toHaveBeenCalledWith('item');
-    expect(supabase.from().insert).toHaveBeenCalledWith(items);
-    expect(supabase.from().insert().select).toHaveBeenCalled();
+    expect(mSupabase.from).toHaveBeenCalledWith('item');
+    expect(mSupabase.from().insert).toHaveBeenCalledWith(items);
+    expect(mSupabase.from().insert().select).toHaveBeenCalled();
   });
 
   it('should log an unexpected error message on unexpected error', async () => {
     const items = [{ name: 'item1' }];
-    supabase.from.mockImplementation(() => {
+    mSupabase.from.mockImplementation(() => {
       throw new Error('Unexpected error');
     });
 
     console.error = jest.fn();
 
-    await insertItemsToDatabase(items);
+    await insertItemsToDatabase(items, mSupabase);
 
     expect(console.error).toHaveBeenCalledWith('Unexpected error during database insertion:', 'Unexpected error');
-    expect(supabase.from).toHaveBeenCalledWith('item');
+    expect(mSupabase.from).toHaveBeenCalledWith('item');
   });
 });
 
-//getItemsFromDatabase - lines 23 - 42
+
+// //getItemsFromDatabase - lines 23 - 42

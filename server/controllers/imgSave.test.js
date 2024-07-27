@@ -1,1 +1,0 @@
-const SB_func = require('./imgSave');

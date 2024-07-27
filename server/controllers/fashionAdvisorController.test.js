@@ -1,1 +1,0 @@
-const fashionAdvisorController = require('./fashionAdvisorController');
