@@ -1,6 +1,7 @@
 const fashionAdvisorController = {};
 const dotenv = require('dotenv');
 const fs = require('fs');
+const FileReader = require('filereader')
 
 dotenv.config();
 // console.log(dotenv.config())
@@ -69,9 +70,9 @@ fashionAdvisorController.ImgGenService = async (req, res, next) => {
 
 fashionAdvisorController.ImgEditService = async (req, res, next) => {
   //console.log('file', req.file);
-  console.log('body', req.body);
+  //console.log('body', req.body);
 
-  const { item, color, style, features } = JSON.parse(req.body.textInput);
+  
 
   function dataURLtoFile(dataurl, filename) {
     var arr = dataurl.split(','),
@@ -85,27 +86,29 @@ fashionAdvisorController.ImgEditService = async (req, res, next) => {
     return new File([u8arr], filename, { type: mime });
   }
 
-  //Usage example:
-  const imageFile = dataURLtoFile(req.body.uploadImage, 'image.png');
-  console.log(imageFile);
+  function BlobtoDataURL(arrayBuffer) {
+    var arr = dataurl.split(','),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[arr.length - 1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
 
-  // console.log(req.body.uploadImage.split(','));
-  // const imageFile = new File()
-
-  //console.log(item, color, style, features);
-
-  // if (!item || !color || !style || !features) {
-  //   return res
-  //     .status(400)
-  //     .json({ error: "Item, color, style or features is missing." });
-  // }
-
+  
+  
+  
   try {
-    const prompt = `a photo of a person wearing a ${style} ${item} in ${color} , 
-        featuring ${features}. `;
+
+    const imageFile = dataURLtoFile(req.body.uploadImage, 'image.png');
+    // const prompt = `a photo of a person wearing a ${style} ${item} in ${color} , 
+    //     featuring ${features}. `;
 
     const form = new FormData();
-    form.append('prompt', prompt);
+    form.append('prompt', req.body.item);
     form.append('image', imageFile);
     form.append('n', 1);
     form.append('size', '512x512');
@@ -123,12 +126,27 @@ fashionAdvisorController.ImgEditService = async (req, res, next) => {
     const response = await fetch(endpoint_openai_edit, options);
 
     const data = await response.json();
-    console.log(data);
+    //console.log(data);
 
     const image_url = data.data[0].url;
     console.log(image_url);
+    
+    // const image_data = await fetch(image_url);
+    // const image_blob = await image_data.blob();
+    // const image_array = await image_blob.arrayBuffer();
+    // const image_buffer = Buffer.from(image_array );
+    // const image_string = image_buffer.toString('base64url', 0, 100)
+    // console.log(image_string)
 
-    res.json({ image_url });
+    // // const fsImage = fs.readFileSync(image_array);
+    // // console.log('fsImage', fsImage)
+
+    // // const image_text = await image_blob.text()
+    return res.json({image_url});
+
+
+    
+    //res.json({ image_url });
   } catch (error) {
     console.error('Dall E Image Generator Error: ', error);
     res

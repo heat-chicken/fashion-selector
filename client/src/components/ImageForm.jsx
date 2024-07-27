@@ -4,31 +4,26 @@ import React, { useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { useDispatch, useSelector } from 'react-redux';
+import { describe } from '../slices/promptSlice'
 
 function ImageForm({ onImageGenerated, setCurrentImageUrl, imageUpload, imgRef }) {
-  const [item, setItem] = useState('');
-  const [color, setColor] = useState('');
-  const [style, setStyle] = useState('');
-  const [features, setFeatures] = useState('');
+  const itemDescription = useSelector(store => store.prompt.itemDescription);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({
-    item: false,
-    color: false,
-    style: false,
-    features: false,
+    itemDescription: false,
   });
+
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newErrors = {
-      item: !item,
-      color: !color,
-      style: !style,
-      features: !features,
+      itemDescription: !itemDescription,
     };
     setErrors(newErrors);
 
-    if (!item || !color || !style || !features) {
+    if (!itemDescription) {
       setLoading(false);
       return;
     }
@@ -37,16 +32,16 @@ function ImageForm({ onImageGenerated, setCurrentImageUrl, imageUpload, imgRef }
     setLoading(true);
     event.preventDefault();
 
-    console.log('ref', imgRef.current)
+    //console.log('ref', imgRef.current)
 
     const uploadImage = imgRef.current.toDataURL();
     
-    console.log('uploadImage', uploadImage)
+    //console.log('uploadImage', uploadImage)
 
     const formData = new FormData();
     formData.append(
-      'textInput',
-      JSON.stringify({ item, color, style, features })
+      'item',
+      itemDescription
     );
     formData.append('uploadImage', uploadImage);
 
@@ -66,7 +61,7 @@ function ImageForm({ onImageGenerated, setCurrentImageUrl, imageUpload, imgRef }
       const data = await response.json();
       setLoading(false);
       console.log('data:', data);
-      onImageGenerated(data.image_url, { item, color, style, features }); // item color and style are passed as an object to the onImageGenerated function so that it can be used in the Search component
+      onImageGenerated(data.image_url, itemDescription); // item color and style are passed as an object to the onImageGenerated function so that it can be used in the Search component
     } catch (error) {
       console.error('Error:', error);
     }
@@ -75,46 +70,16 @@ function ImageForm({ onImageGenerated, setCurrentImageUrl, imageUpload, imgRef }
   return (
     <form onSubmit={handleSubmit}>
       <TextField
-        id='item_text_box'
+        id='item_description_text_box'
         // defaultValue="hi"
-        label='Item'
-        value={item}
-        onChange={(e) => setItem(e.target.value)}
-        error={errors.item}
-        helperText={errors.item ? 'Item is required' : ''}
-      />
-      <br />
-      <br />
-      <TextField
-        id='color_text_box'
-        // defaultValue="hi"
-        label='color'
-        value={color}
-        onChange={(e) => setColor(e.target.value)}
-        error={errors.color}
-        helperText={errors.color ? 'Color is required' : ''}
-      />
-      <br />
-      <br />
-      <TextField
-        id='style_text_box'
-        // defaultValue="hi"
-        label='style'
-        value={style}
-        onChange={(e) => setStyle(e.target.value)}
-        error={errors.style}
-        helperText={errors.style ? 'Style is required' : ''}
-      />
-      <br />
-      <br />
-      <TextField
-        id='features_text_box'
-        // defaultValue="hi"
-        label='features'
-        value={features}
-        onChange={(e) => setFeatures(e.target.value)}
-        error={errors.features}
-        helperText={errors.features ? 'Features is required' : ''}
+        label='Item description'
+        value={itemDescription}
+        onChange={(e) => dispatch(describe(e.target.value))}
+        error={errors.itemDescription}
+        helperText={errors.itemDescription ? 'Item description is required' : ''}
+        multiline
+        helperText={'Describe the clothes in detail.'}
+        rows = {5}
       />
       <br />
       <br />
