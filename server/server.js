@@ -43,7 +43,7 @@ app.use((req, res, next) => {
 // });
 
 app.post("/api/signup", userController.signUp);
-
+app.post("/api/login", userController.login);
 
 
 app.post('/api/save', SB_func.insertItemsToDatabase  , (req, res) => {
