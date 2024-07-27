@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+//KidPix.jsx
+
+import React, { useState, useRef, useEffect } from 'react';
 import { Stage, Layer, Rect, Circle, Image, Line } from 'react-konva';
 import useImage from 'use-image';
 import { Button, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
@@ -16,20 +18,27 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-const KidPix = ({imageUpload, setImageUpload, imgRef}) => {
+const KidPix = ({ imgRef, currentImageUrl, imgUploadURL, updateImgUploadURL, lines, setLines}) => {
 
   //image uploading code
-  const [imgUrlState, updateImgUrl] = useState();
+
 
   const handleImageUpload = (e) => {
-    updateImgUrl(URL.createObjectURL(e.target.files[0]));
+    updateImgUploadURL(URL.createObjectURL(e.target.files[0]));
   };
 
-  const [image] = useImage(imgUrlState);
+  // useEffect(()=>{
+  //   if(currentImageUrl){
+  //     updateImgUrl(currentImageUrl)
+  //   }
+  // }, [currentImageUrl])
+
+  let [image] = useImage(imgUploadURL);
+
 
   //drawing code
   const [tool, setTool] = useState('eraser');
-  const [lines, setLines] = useState([]);
+  
   const isDrawing = useRef(false);
 
   const handleMouseDown = (e) => {
@@ -114,7 +123,8 @@ const KidPix = ({imageUpload, setImageUpload, imgRef}) => {
       >
         <Layer ref={imgRef} >
           <Image  image={image}  width={512}
-        height={512}/>
+        height={512}
+        crossOrigin = "Anonymous"/>
           {lines.map((line, i) => (
             <Line
               key={i}

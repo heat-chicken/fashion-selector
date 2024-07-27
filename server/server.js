@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const PORT = 3003;
+const cors = require('cors')
 
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -13,11 +14,16 @@ const fashionAdvisorController = require('./controllers/fashionAdvisorController
 const SB_func  = require('./controllers/imgSave')
 
 app.use(express.json()); //delete if no need for json
+
+// commenting out, check with yiqun value of limiting CORS policies
 app.use((req, res, next) => {
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
   res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   next();
 });
+
+//app.use(cors());
 
 
 // app.post(

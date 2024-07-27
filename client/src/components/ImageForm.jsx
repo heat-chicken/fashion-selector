@@ -1,4 +1,4 @@
-// InputForm.jsx
+// ImageForm.jsx
 
 import React, { useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -37,7 +37,11 @@ function ImageForm({ onImageGenerated, setCurrentImageUrl, imageUpload, imgRef }
     setLoading(true);
     event.preventDefault();
 
+    console.log('ref', imgRef.current)
+
     const uploadImage = imgRef.current.toDataURL();
+    
+    console.log('uploadImage', uploadImage)
 
     const formData = new FormData();
     formData.append(
