@@ -36,3 +36,6 @@ body {
   height: auto;
 }
 
+.oauth {
+  padding: 8px;
+}

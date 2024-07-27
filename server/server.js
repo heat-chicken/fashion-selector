@@ -9,14 +9,14 @@ const fs = require('fs');
 
 const fashionAdvisorController = require('./controllers/fashionAdvisorController');
 const SB_func  = require('./controllers/imgSave')
+const userController = require("./controllers/userController");
 
 app.use(express.json()); //delete if no need for json
 app.use((req, res, next) => {
-  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
-  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   next();
 });
-
 
 // app.post(
 //   '/api/genImage',
@@ -42,8 +42,8 @@ app.use((req, res, next) => {
 //   return res.status(200).json(result);
 // });
 
-
-
+app.post("/api/signup", userController.signUp);
+app.post("/api/login", userController.login);
 
 
 app.post('/api/save', SB_func.insertItemsToDatabase  , (req, res) => {
