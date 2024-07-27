@@ -56,59 +56,54 @@ console.log('App.jsx is running');
 
 
 function App() {
-
-  console.log(google_key)
+  // to remove, why google oauth is here?
+  console.log(google_key);
   useEffect(() => {
+    function start() {
+      gapi.auth2.init({
+        client_id:
+          "135318755257-cbm6k01p765cp64udecsj4vt7mghnc7s.apps.googleusercontent.com",
+        scope: "/login",
+      });
 
-    function start(){
-        gapi.auth2.init({
-            client_id: '135318755257-cbm6k01p765cp64udecsj4vt7mghnc7s.apps.googleusercontent.com',
-            scope: '/login'
-        })
+      // gapi.client.init({
+      //     client_id: clientID,
+      //     scope: scope
+      // })
+    }
 
-        // gapi.client.init({
-        //     client_id: clientID,
-        //     scope: scope
-        // })
-    };
+    gapi.load("client:auth2", start);
+  });
+  const onSuccess = (res) => {
+    console.log("successfully logged in");
+    navigate("/home");
+    //res.redirect('/home')
+  };
 
-    gapi.load('client:auth2', start)
-
-})
-const onSuccess = (res)=>{
-  console.log('successfully logged in')
-  navigate('/home');
-  //res.redirect('/home')
-}
-
-const onFailure = (res)=>{
-  console.log('fail', res)
-}
+  const onFailure = (res) => {
+    console.log("fail", res);
+  };
 
   return (
-  <GoogleOAuthProvider clientId= {google_key} >
-   
-    <ThemeProvider theme={customTheme}>
-      <CssBaseline />
-      <Router>
-        <Background />
-        <ContentContainer>
-          <Nav />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signUp" element={<SignUp />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/secretCloset" element={<SecretCloset />} />
-           
-        
-          </Routes>
-        </ContentContainer>
-      </Router>
-    </ThemeProvider>
-
-</GoogleOAuthProvider>
+    <GoogleOAuthProvider clientId={google_key}>
+      <ThemeProvider theme={customTheme}>
+        <CssBaseline />
+        <Router>
+          <Background />
+          <ContentContainer>
+            <Nav />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signUp" element={<SignUp />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/secretCloset" element={<SecretCloset />} />
+            </Routes>
+          </ContentContainer>
+        </Router>
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   );
 }
 
