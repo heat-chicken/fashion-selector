@@ -21,6 +21,7 @@ import { red } from "@mui/material/colors";
 import { GoogleLogin } from "@react-oauth/google";
 // import { GoogleLogin } from 'react-google-login';
 import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const google_key = process.env.CLIENT_ID;
 
@@ -55,6 +56,7 @@ export default function SignIn() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     setError("");
 
     try {
@@ -94,19 +96,15 @@ export default function SignIn() {
   // };
 
   // handles google oauth
+
   const onSuccess = async (res) => {
-    console.log(res);
+    const userDetails = jwtDecode(res.credential);
+    const email = userDetails.email;
+    const firstName = userDetails.given_name;
+    const lastName = userDetails.family_name;
     console.log("successfully logged in");
 
-    // const response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-    //   headers: {
-    //       Authorization: `Bearer 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`
-    //   }
-    // })
-    // console.log(response)
-
     navigate("/SecretCloset");
-    //res.redirect('/home')
   };
 
   const onFailure = (res) => {
@@ -131,6 +129,15 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          <div className="oauth">
+            <GoogleLogin
+              className="oauth"
+              onSuccess={onSuccess}
+              onError={onFailure}
+              width="500px"
+            />
+          </div>
+          or
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -179,15 +186,6 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <GoogleLogin
-              id="google_btn"
-              clientId={google_key}
-              buttonText="Login"
-              onSuccess={onSuccess}
-              onFailure={onFailure}
-              // cookiePolicy={'single_host_origin'}
-              // isSignedIn={true}
-            />
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -207,42 +205,3 @@ export default function SignIn() {
     </ThemeProvider>
   );
 }
-
-
-// onSuccess={responseMessage} onError={errorMessage} 
-// const Login = () => {
-//   return (
-//     <div className="pages">
-//       <h1>Welcome to Login</h1>
-//       <p>Please login to continue.</p>
-//       <form>
-//         <TextField
-//           id="usernmae_text_box"
-//           // defaultValue="hi"
-//           label="username" 
-//           //value={username}
-//           // onChange={(e) => setItem(e.target.value)}
-//           //error={errors.item}
-//           //helperText={errors.item ? 'Item is required' : ''}
-//         />
-//         <br />
-//         <br />
-//         <TextField
-        
-//         id="password_text_box"
-//         // defaultValue="hi"
-//         label="password" 
-//         //value={password}
-//         // onChange={(e) => setItem(e.target.value)}
-//         //error={errors.item}
-//         //helperText={errors.item ? 'Item is required' : ''}
-//       />
-//         <br />
-//         <br />
-//         <Button variant="contained" type="submit">Submit</Button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Login;
