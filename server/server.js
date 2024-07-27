@@ -12,19 +12,16 @@ const upload = multer({dest: 'uploads/'});
 
 const fashionAdvisorController = require('./controllers/fashionAdvisorController');
 const SB_func  = require('./controllers/imgSave')
+const userController = require("./controllers/userController");
 
 app.use(express.json()); //delete if no need for json
 
 // commenting out, check with yiqun value of limiting CORS policies
 app.use((req, res, next) => {
-  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
-  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   next();
 });
-
-//app.use(cors());
-
 
 // app.post(
 //   '/api/genImage',
@@ -50,12 +47,9 @@ app.use((req, res, next) => {
 //   return res.status(200).json(result);
 // });
 
+app.post("/api/signup", userController.signUp);
+app.post("/api/login", userController.login);
 
-
-// app.post('/test', (req, res, next)=>{
-//   setTimeout(()=>console.log(req), 100);
-//   res.sendStatus(600)
-// })
 
 app.post('/api/save', SB_func.insertItemsToDatabase  , (req, res) => {
 
