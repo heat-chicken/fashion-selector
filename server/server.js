@@ -11,6 +11,17 @@ const fashionAdvisorController = require('./controllers/fashionAdvisorController
 const SB_func  = require('./controllers/imgSave')
 const userController = require("./controllers/userController");
 
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  console.error("JWT_SECRET is not set in environment variables");
+  process.exit(1);
+}
+console.log("JWT_SECRET is set and its length is:", JWT_SECRET.length);
+
 app.use(express.json()); //delete if no need for json
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
@@ -45,20 +56,50 @@ app.use((req, res, next) => {
 app.post("/api/signup", userController.signUp);
 app.post("/api/login", userController.login);
 
+const authMiddleware = (req, res, next) => {
+  console.log("Headers received:", req.headers);
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
-app.post('/api/save', SB_func.insertItemsToDatabase  , (req, res) => {
+  if (!token) {
+    return res.status(401).json({ error: "No token provided" });
+  }
 
-    console.log('serving saving images');
+  try {
+    console.log("Token received:", token);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    console.log("Decoded token:", decoded);
+    req.user = { email: decoded.email };
+    next();
+  } catch (error) {
+    console.error("Token verification error:", error);
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ error: "Invalid token: " + error.message });
+    } else if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ error: "Token expired" });
+    } else {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+  }
+};
 
-    return res.status(200);
-})
+// Use this middleware for protected routes
+app.get("/api/getsaveImg", authMiddleware, SB_func.getSavedImg);
+app.post("/api/save", authMiddleware, SB_func.insertItemsToDatabase);
 
-app.get('/api/getsaveImg', SB_func.getSavedImg  , (req, res) => {
+// app.post('/api/save', SB_func.insertItemsToDatabase  , (req, res) => {
 
-  console.log('serving gettinng saved images');
+//     console.log('serving saving images');
 
-  return res.status(200);
-})
+//     return res.status(200);
+// })
+
+// app.get('/api/getsaveImg', SB_func.getSavedImg  , (req, res) => {
+
+//   console.log('serving gettinng saved images');
+
+//   return res.status(200);
+// })
 
 
 app.post(
