@@ -32,6 +32,12 @@ function ShowImages({ bingData }) {
   const token = useSelector((state) => state.user.token);
 
   const save = async (index, image) => {
+
+    if (!token) {
+      alert("Please log in to save images.");
+      return;
+    }
+    
     setValidImages((prevImages) =>
       prevImages.map((image, i) =>
         i === index ? { ...image, btnLabel: "SAVED!" } : image
@@ -53,9 +59,7 @@ function ShowImages({ bingData }) {
     try {
       const token = localStorage.getItem("token");
       console.log("Token retrieved for save:", token);
-      if (!token) {
-        throw new Error("No token found. Please log in again.");
-      }
+
       const response = await fetch("/api/save", {
         method: "POST",
         headers: {
