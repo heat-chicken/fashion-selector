@@ -1,14 +1,17 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 const app = express();
 const PORT = 3003;
+const cors = require("cors");
 
-const bodyParser = require('body-parser');
-const fs = require('fs');
+const bodyParser = require("body-parser");
+const fs = require("fs");
 
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
-const fashionAdvisorController = require('./controllers/fashionAdvisorController');
-const SB_func  = require('./controllers/imgSave')
+const fashionAdvisorController = require("./controllers/fashionAdvisorController");
+const SB_func = require("./controllers/imgSave");
 const userController = require("./controllers/userController");
 
 require("dotenv").config();
@@ -23,6 +26,8 @@ if (!JWT_SECRET) {
 console.log("JWT_SECRET is set and its length is:", JWT_SECRET.length);
 
 app.use(express.json()); //delete if no need for json
+
+// commenting out, check with yiqun value of limiting CORS policies
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
@@ -101,49 +106,53 @@ app.post("/api/save", authMiddleware, SB_func.insertItemsToDatabase);
 //   return res.status(200);
 // })
 
-
 app.post(
-  '/api/genImage',
+  "/api/genImage",
   fashionAdvisorController.ImgGenService,
   (req, res) => {
-    console.log('serving image generater');
+    console.log("serving image generator");
 
     return res.status(200);
   }
 );
 
-app.post('/api/refineGenImage', (req, res) => {
-  console.log('refining generated image');
+app.post("/api/refineGenImage", (req, res) => {
+  console.log("refining generated image");
   return res.status(200);
 });
 
-app.post('/api/bing', fashionAdvisorController.matchService, (req, res) => {
-  console.log('serving match generater');
+app.post(
+  "/api/editImage",
+  upload.single("uploadImage"),
+  fashionAdvisorController.ImgEditService,
+  (req, res) => {
+    res.status(200).json({ image_url: res.locals.url });
+  }
+);
+
+app.post("/api/bing", fashionAdvisorController.matchService, (req, res) => {
+  console.log("serving match generater");
 
   return res.status(200);
 });
-
 
 // this should take the user to the first page
-app.get('/search', (req, res) => {
-  console.log('get to the search page ');
+app.get("/search", (req, res) => {
+  console.log("get to the search page ");
   return res
     .status(200)
-    .sendFile(path.join(__dirname, '../client/public/index.html'));
+    .sendFile(path.join(__dirname, "../client/public/index.html"));
 });
 
-app.delete('/api/deleteImage/:id', async (req, res) => {
+app.delete("/api/deleteImage/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const { error } = await supabase
-      .from('images')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from("images").delete().eq("id", id);
 
     if (error) throw error;
 
-    res.status(200).send({ message: 'Image deleted successfully' });
+    res.status(200).send({ message: "Image deleted successfully" });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
@@ -152,9 +161,9 @@ app.delete('/api/deleteImage/:id', async (req, res) => {
 /**
  * 404 handler
  */
-app.use('*', (req, res) => {
-  console.log('error finding url');
-  res.status(404).send('Not Found');
+app.use("*", (req, res) => {
+  console.log("error finding url");
+  res.status(404).send("Not Found");
 });
 
 /**
@@ -162,7 +171,7 @@ app.use('*', (req, res) => {
  */
 app.use((err, req, res, next) => {
   console.log(err);
-  console.log('hit global error');
+  console.log("hit global error");
 
   res.status(500).send({ error: err });
 });
