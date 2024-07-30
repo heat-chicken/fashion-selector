@@ -36,7 +36,7 @@ function ImageForm({ onImageGenerated, setCurrentImageUrl, imageUpload, imgRef }
 
     const uploadImage = imgRef.current.toDataURL();
     
-    //console.log('uploadImage', uploadImage)
+    console.log('uploadImage', uploadImage)
 
     const formData = new FormData();
     formData.append(
