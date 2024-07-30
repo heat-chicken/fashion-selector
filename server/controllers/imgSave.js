@@ -32,7 +32,7 @@ SB_func.insertItemsToDatabase = async function (req, res, next) {
   }
 };
 
-SB_func.getSavedImg = async function (eq, res, next) {
+SB_func.getSavedImg = async function (req, res, next) {
   const userEmail = req.user.email;
   console.log("Fetching images for user:", userEmail);
 
