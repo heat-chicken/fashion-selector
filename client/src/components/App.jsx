@@ -12,6 +12,8 @@ import SignUp from './SignUp';
 import About from './About';
 import Background from './Background';
 import SecretCloset from './SecretCloset';
+import Upload from './Upload';
+
 import customTheme from '../themes/customTheme';
 import backgroundImage from '../assets/images/background1.jpg';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -96,6 +98,7 @@ function App() {
                 <Route path="/signUp" element={<SignUp />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/secretCloset" element={<SecretCloset />} />
+                <Route path="/upload" element={<Upload />} />
               </Routes>
             </ContentContainer>
           </Router>

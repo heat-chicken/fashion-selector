@@ -2,19 +2,24 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const PORT = 3003;
+const cors = require('cors');
 
 const bodyParser = require('body-parser');
 const fs = require('fs');
 
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const fashionAdvisorController = require('./controllers/fashionAdvisorController');
-const SB_func  = require('./controllers/imgSave')
-const userController = require("./controllers/userController");
+const SB_func = require('./controllers/imgSave');
+const userController = require('./controllers/userController');
 
 app.use(express.json()); //delete if no need for json
+
+// commenting out, check with yiqun value of limiting CORS policies
 app.use((req, res, next) => {
-  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
   next();
 });
 
@@ -42,30 +47,26 @@ app.use((req, res, next) => {
 //   return res.status(200).json(result);
 // });
 
-app.post("/api/signup", userController.signUp);
-app.post("/api/login", userController.login);
+app.post('/api/signup', userController.signUp);
+app.post('/api/login', userController.login);
 
-
-app.post('/api/save', SB_func.insertItemsToDatabase  , (req, res) => {
-
-    console.log('serving saving images');
-
-    return res.status(200);
-})
-
-app.get('/api/getsaveImg', SB_func.getSavedImg  , (req, res) => {
-
-  console.log('serving gettinng saved images');
+app.post('/api/save', SB_func.insertItemsToDatabase, (req, res) => {
+  console.log('serving saving images');
 
   return res.status(200);
-})
+});
 
+app.get('/api/getsaveImg', SB_func.getSavedImg, (req, res) => {
+  console.log('serving getting saved images');
+
+  return res.status(200);
+});
 
 app.post(
   '/api/genImage',
   fashionAdvisorController.ImgGenService,
   (req, res) => {
-    console.log('serving image generater');
+    console.log('serving image generator');
 
     return res.status(200);
   }
@@ -76,12 +77,20 @@ app.post('/api/refineGenImage', (req, res) => {
   return res.status(200);
 });
 
+app.post(
+  '/api/editImage',
+  upload.single('uploadImage'),
+  fashionAdvisorController.ImgEditService,
+  (req, res) => {
+    res.status(200).json({ image_url: res.locals.url });
+  }
+);
+
 app.post('/api/bing', fashionAdvisorController.matchService, (req, res) => {
   console.log('serving match generater');
 
   return res.status(200);
 });
-
 
 // this should take the user to the first page
 app.get('/search', (req, res) => {
@@ -95,10 +104,7 @@ app.delete('/api/deleteImage/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const { error } = await supabase
-      .from('images')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('images').delete().eq('id', id);
 
     if (error) throw error;
 

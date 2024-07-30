@@ -1,5 +1,7 @@
 const fashionAdvisorController = {};
 const dotenv = require('dotenv');
+const fs = require('fs');
+const FileReader = require('filereader')
 
 dotenv.config();
 // console.log(dotenv.config())
@@ -7,6 +9,7 @@ dotenv.config();
 
 const endpoint = 'https://api.bing.microsoft.com/v7.0/images/visualsearch';
 const endpoint_openai = 'https://api.openai.com/v1/images/generations';
+const endpoint_openai_edit = 'https://api.openai.com/v1/images/edits';
 // console.log('can you read this',process.env);
 const subscriptionKey = process.env.SUBSCRIPTION_KEY;
 const openai_key = process.env.OPENAI_API_KEY;
@@ -25,7 +28,7 @@ fashionAdvisorController.ImgGenService = async (req, res, next) => {
   if (!item || !color || !style || !features) {
     return res
       .status(400)
-      .json({ error: "Item, color, style or features is missing." });
+      .json({ error: 'Item, color, style or features is missing.' });
   }
 
   try {
@@ -35,10 +38,10 @@ fashionAdvisorController.ImgGenService = async (req, res, next) => {
     The item should be 100% within the image border.`;
 
     const options = {
-      method: "POST",
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${openai_key}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         prompt: prompt,
@@ -46,7 +49,7 @@ fashionAdvisorController.ImgGenService = async (req, res, next) => {
       }),
     };
 
-    console.log("Options: ", options);
+    console.log('Options: ', options);
 
     const response = await fetch(endpoint_openai, options);
 
@@ -58,10 +61,91 @@ fashionAdvisorController.ImgGenService = async (req, res, next) => {
 
     res.json({ image_url });
   } catch (error) {
-    console.error("Dall E Image Generator Error: ", error);
+    console.error('Dall E Image Generator Error: ', error);
     res
       .status(500)
-      .json({ error: "An error occurred on Dall E Image Generator." });
+      .json({ error: 'An error occurred on Dall E Image Generator.' });
+  }
+};
+
+fashionAdvisorController.ImgEditService = async (req, res, next) => {
+  //console.log('file', req.file);
+  //console.log('body', req.body);
+
+  
+
+  function dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(','),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[arr.length - 1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
+
+  // function BlobtoDataURL(arrayBuffer) {
+  //   var arr = dataurl.split(','),
+  //     mime = arr[0].match(/:(.*?);/)[1],
+  //     bstr = atob(arr[arr.length - 1]),
+  //     n = bstr.length,
+  //     u8arr = new Uint8Array(n);
+  //   while (n--) {
+  //     u8arr[n] = bstr.charCodeAt(n);
+  //   }
+  //   return new File([u8arr], filename, { type: mime });
+  // }
+
+  
+  
+  
+  try {
+
+    const imageFile = dataURLtoFile(req.body.uploadImage, 'image.png');
+    // const prompt = `a photo of a person wearing a ${style} ${item} in ${color} , 
+    //     featuring ${features}. `;
+
+    const form = new FormData();
+    form.append('prompt', req.body.item);
+    form.append('image', imageFile);
+    form.append('n', 1);
+    form.append('size', '512x512');
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${openai_key}`,
+      },
+      body: form,
+
+    };
+
+    console.log('Options: ', options);
+
+    const response = await fetch(endpoint_openai_edit, options);
+
+    const data = await response.json();
+    //console.log(data);
+
+    const openai_url = data.data[0].url;
+    console.log(openai_url);
+    
+    //fetches png from openai link and processes until it's a string that can be returned to the client
+    const image_data = await fetch(openai_url);
+    const image_blob = await image_data.blob();
+    const image_array = await image_blob.arrayBuffer();
+    const image_buffer = Buffer.from(image_array );
+    const image_string = image_buffer.toString('base64')
+    res.locals.url = 'data:image/png;base64,'.concat(image_string)
+
+    return next();
+
+  } catch (error) {
+    console.error('Dall E Image Generator Error: ', error);
+    res
+      .status(500)
+      .json({ error: 'An error occurred on Dall E Image Generator.' });
   }
 };
 
