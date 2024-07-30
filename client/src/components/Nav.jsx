@@ -16,7 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
 
-const pages = ['Home', 'Search', 'About', 'Login', 'Sign Up'];
+const pages = ['Home', 'Search', 'Upload', 'About', 'Login', 'Sign Up'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
@@ -41,6 +41,9 @@ function ResponsiveAppBar() {
         break;
       case 'Search':
         navigate('/search');
+        break;
+      case 'Upload':
+        navigate('/upload');
         break;
       case 'Login':
         navigate('/login');
