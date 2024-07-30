@@ -20,6 +20,7 @@ import { jwtDecode } from 'jwt-decode';
 
 const defaultTheme = createTheme();
 
+// for google oauth
 const onSuccess = (res) => {
   const userDetails = jwtDecode(res.credential);
   const email = userDetails.email;
@@ -31,6 +32,7 @@ const onFailure = () => {
   console.log('Login Failed');
 };
 
+// standard sign up
 export default function SignUp() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
