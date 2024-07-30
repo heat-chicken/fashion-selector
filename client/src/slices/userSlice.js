@@ -5,6 +5,7 @@ const initialState = {
   email: null,
   firstName: null,
   lastName: null,
+  token: null,
 };
 
 export const userSlice = createSlice({
