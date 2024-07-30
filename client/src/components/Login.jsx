@@ -69,13 +69,23 @@ export default function SignIn() {
         body: JSON.stringify({ email, password }),
       });
 
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Login failed');
+        throw new Error(errorData.error || "Login failed");
       }
 
       const data = await response.json();
-      localStorage.setItem('token', data.token);
+      localStorage.setItem("token", data.token);
+      console.log("Token stored:", data.token);
+
+      dispatch(
+        login({
+          email: data.user.email,
+          token: data.token,
+        })
+      );
+
       navigate('/search');
     } catch (error) {
       setError(error.message);
