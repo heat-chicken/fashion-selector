@@ -86,17 +86,17 @@ fashionAdvisorController.ImgEditService = async (req, res, next) => {
     return new File([u8arr], filename, { type: mime });
   }
 
-  function BlobtoDataURL(arrayBuffer) {
-    var arr = dataurl.split(','),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[arr.length - 1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, { type: mime });
-  }
+  // function BlobtoDataURL(arrayBuffer) {
+  //   var arr = dataurl.split(','),
+  //     mime = arr[0].match(/:(.*?);/)[1],
+  //     bstr = atob(arr[arr.length - 1]),
+  //     n = bstr.length,
+  //     u8arr = new Uint8Array(n);
+  //   while (n--) {
+  //     u8arr[n] = bstr.charCodeAt(n);
+  //   }
+  //   return new File([u8arr], filename, { type: mime });
+  // }
 
   
   
@@ -128,25 +128,19 @@ fashionAdvisorController.ImgEditService = async (req, res, next) => {
     const data = await response.json();
     //console.log(data);
 
-    const image_url = data.data[0].url;
-    console.log(image_url);
+    const openai_url = data.data[0].url;
+    console.log(openai_url);
     
-    // const image_data = await fetch(image_url);
-    // const image_blob = await image_data.blob();
-    // const image_array = await image_blob.arrayBuffer();
-    // const image_buffer = Buffer.from(image_array );
-    // const image_string = image_buffer.toString('base64url', 0, 100)
-    // console.log(image_string)
+    //fetches png from openai link and processes until it's a string that can be returned to the client
+    const image_data = await fetch(openai_url);
+    const image_blob = await image_data.blob();
+    const image_array = await image_blob.arrayBuffer();
+    const image_buffer = Buffer.from(image_array );
+    const image_string = image_buffer.toString('base64')
+    res.locals.url = 'data:image/png;base64,'.concat(image_string)
 
-    // // const fsImage = fs.readFileSync(image_array);
-    // // console.log('fsImage', fsImage)
+    return next();
 
-    // // const image_text = await image_blob.text()
-    return res.json({image_url});
-
-
-    
-    //res.json({ image_url });
   } catch (error) {
     console.error('Dall E Image Generator Error: ', error);
     res
