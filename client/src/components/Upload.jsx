@@ -7,6 +7,8 @@ import ShowImages from './ShowImages';
 import KidPix from './KidPix';
 import CircularProgress from '@mui/material/CircularProgress';
 import LinearProgress from '@mui/material/LinearProgress';
+import { useDispatch } from 'react-redux';
+import { clearView, generate, bingSearch  } from '../slices/promptSlice'
 
 function Upload() {
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
@@ -18,12 +20,13 @@ function Upload() {
   const [imageUpload, setImageUpload] = useState();
   const [lines, setLines] = useState([]);
   const imgRef = useRef(null);
+  const dispatch = useDispatch();
 
   const handleImageGenerated = (imageUrl, prompt) => {
     setCurrentImageUrl(imageUrl);
     setCurrentPrompt(prompt);
-    setLines([]);
     updateImgUploadURL(imageUrl);
+    dispatch(clearView())
     setLoading(false);
   };
 
@@ -57,13 +60,16 @@ function Upload() {
   };
 
   const handleYesClick = async () => {
+    await dispatch(bingSearch());
     setBingData('');
     setLoading_bing(true);
     try {
-      const response = await fetch('/api/bing', {
+      const uploadImage = imgRef.current.toDataURL();
+      const formData = new FormData();
+    formData.append('uploadImage', uploadImage);
+      const response = await fetch('/api/bingUpload', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageUrl: currentImageUrl }),
+        body: formData,
       });
 
       if (!response.ok)
@@ -85,6 +91,7 @@ function Upload() {
   const [imgUploadURL, updateImgUploadURL] = useState();
 
   return (
+    <>
     <div
       className='search-page pages'
       style={{
@@ -128,6 +135,7 @@ function Upload() {
         lines = {lines}
         setLines = {setLines}
       />
+</div>
 
       {bingData ? (
         <ShowImages bingData={bingData} />
@@ -138,8 +146,7 @@ function Upload() {
       )}
       {loading_bing && <LinearProgress />}
 
-      {/* {bingData && <ShowImages bingData={bingData} />} */}
-    </div>
+    </>
   );
 }
 
