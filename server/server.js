@@ -17,6 +17,8 @@ const userController = require("./controllers/userController");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
+const cookieParser = require("cookie-parser");
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
 if (!JWT_SECRET) {
@@ -26,6 +28,7 @@ if (!JWT_SECRET) {
 console.log("JWT_SECRET is set and its length is:", JWT_SECRET.length);
 
 app.use(express.json()); //delete if no need for json
+app.use(cookieParser());
 
 // commenting out, check with yiqun value of limiting CORS policies
 app.use((req, res, next) => {
@@ -62,29 +65,25 @@ app.post("/api/signup", userController.signUp);
 app.post("/api/login", userController.login);
 
 const authMiddleware = (req, res, next) => {
-  console.log("Headers received:", req.headers);
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  // const authHeader = req.headers["authorization"];
+  // const token = authHeader && authHeader.split(" ")[1];
+
+  const token = req.cookies.authToken;
 
   if (!token) {
     return res.status(401).json({ error: "No token provided" });
   }
 
   try {
-    console.log("Token received:", token);
+    // console.log("Token received:", token);
     const decoded = jwt.verify(token, JWT_SECRET);
-    console.log("Decoded token:", decoded);
+    // console.log("Decoded token:", decoded);
     req.user = { email: decoded.email };
     next();
   } catch (error) {
     console.error("Token verification error:", error);
-    if (error.name === "JsonWebTokenError") {
-      return res.status(401).json({ error: "Invalid token: " + error.message });
-    } else if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ error: "Token expired" });
-    } else {
-      return res.status(401).json({ error: "Invalid token" });
-    }
+    res.clearCookie("authToken");
+    return res.status(401).json({ error: "Invalid token" });
   }
 };
 

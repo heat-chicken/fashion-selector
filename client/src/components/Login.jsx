@@ -19,6 +19,8 @@ import { jwtDecode } from 'jwt-decode';
 import { useSelector, useDispatch } from 'react-redux';
 import { login } from '../slices/userSlice';
 
+// import Cookies from "js-cookie";
+
 const google_key = process.env.CLIENT_ID;
 
 function Copyright(props) {
@@ -29,12 +31,12 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {'Copyright © '}
+      {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
         Your Website
-      </Link>{' '}
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
@@ -58,7 +60,6 @@ export default function SignIn() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     setError("");
 
     try {
@@ -68,6 +69,7 @@ export default function SignIn() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -76,7 +78,7 @@ export default function SignIn() {
       }
 
       const data = await response.json();
-      localStorage.setItem("token", data.token);
+      // localStorage.setItem("token", data.token);
       // console.log("Token stored:", data.token);
 
       dispatch(
