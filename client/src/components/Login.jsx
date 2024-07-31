@@ -43,10 +43,11 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
+// standard login
 export default function SignIn() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const dispatch = useDispatch();
   // Redux example:
@@ -58,30 +59,40 @@ export default function SignIn() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
+      const response = await fetch("/api/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Login failed');
+        throw new Error(errorData.error || "Login failed");
       }
 
       const data = await response.json();
-      localStorage.setItem('token', data.token);
-      navigate('/search');
+      localStorage.setItem("token", data.token);
+      // console.log("Token stored:", data.token);
+
+      dispatch(
+        login({
+          email: data.user.email,
+          token: data.token,
+        })
+      );
+
+      navigate("/search");
     } catch (error) {
       setError(error.message);
     }
   };
 
+  // for google oauth
   const onSuccess = async (res) => {
     const userDetails = jwtDecode(res.credential);
     const email = userDetails.email;
@@ -94,13 +105,14 @@ export default function SignIn() {
         lastName,
       })
     );
-    console.log('successfully logged in');
+    console.log("successfully logged in");
 
-    navigate('/SecretCloset');
+    // need to change to search page
+    navigate("/SecretCloset");
   };
 
   const onFailure = (res) => {
-    console.log('fail', res);
+    console.log("fail", res);
   };
 
   return (
@@ -110,12 +122,12 @@ export default function SignIn() {
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">

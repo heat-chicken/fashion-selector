@@ -1,23 +1,33 @@
 // client/src/components/Nav.jsx
+// import { useDispatch } from "react-redux";
+// import { logout } from "../slices/userSlice";
 
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import { useNavigate } from 'react-router-dom';
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import AdbIcon from "@mui/icons-material/Adb";
+import { useNavigate } from "react-router-dom";
 
-const pages = ['Home', 'Search', 'About', 'Login', 'Sign Up'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = [
+  "Home",
+  "Search",
+  "Upload",
+  "About",
+  "Login",
+  "Sign Up",
+  "Closet",
+];
+const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -36,28 +46,30 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
 
     switch (page) {
-      case 'Home':
-        navigate('/');
+      case "Home":
+        navigate("/");
         break;
-      case 'Search':
-        navigate('/search');
+      case "Search":
+        navigate("/search");
         break;
-      case 'Login':
-        navigate('/login');
+      case "Upload":
+        navigate("/upload");
         break;
-      case 'Sign Up':
-        navigate('/signUp');
+      case "Login":
+        navigate("/login");
         break;
-      case 'About':
-        navigate('/about');
+      case "Sign Up":
+        navigate("/signUp");
         break;
-      case 'My Closet':
-        navigate('/myCloset');
+      case "About":
+        navigate("/about");
+        break;
+      case "Closet":
+        navigate("/secretCloset");
         break;
       default:
-        console.log('Unknown page:', page);
+        console.log("Unknown page:", page);
     }
-
   };
 
   const handleCloseUserMenu = () => {

@@ -57,6 +57,7 @@ module.exports = {
     minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
   devServer: {
+    headers: {"Access-Control-Allow-Origin": "*"},
     historyApiFallback: true,
     hot: true,
     static: {

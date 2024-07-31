@@ -20,6 +20,7 @@ import { jwtDecode } from 'jwt-decode';
 
 const defaultTheme = createTheme();
 
+// standard sign up
 export default function SignUp() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');

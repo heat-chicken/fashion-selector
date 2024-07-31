@@ -73,7 +73,10 @@ userController.login = async (req, res) => {
     }
 
     // Create and assign a token
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    console.log("Generated token:", token);
 
     res.status(200).json({
       message: "Login successful",
