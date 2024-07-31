@@ -20,17 +20,7 @@ import { jwtDecode } from 'jwt-decode';
 
 const defaultTheme = createTheme();
 
-const onSuccess = (res) => {
-  const userDetails = jwtDecode(res.credential);
-  const email = userDetails.email;
-  const firstName = userDetails.given_name;
-  const lastName = userDetails.family_name;
-};
-
-const onFailure = () => {
-  console.log('Login Failed');
-};
-
+// standard sign up
 export default function SignUp() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -39,10 +29,7 @@ export default function SignUp() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError('');
-
+  const signupPost = async (firstName, lastName, email, password = '') => {
     try {
       const response = await fetch('/api/signup', {
         method: 'POST',
@@ -69,6 +56,28 @@ export default function SignUp() {
     }
   };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setError('');
+    const firstName = event.target.elements.firstName.value;
+    const lastName = event.target.elements.email.value;
+    const email = event.target.elements.email.value;
+    const password = event.target.elements.password.value;
+    signupPost(firstName, lastName, email, password);
+  };
+
+  const onOauthSuccess = (res) => {
+    const userDetails = jwtDecode(res.credential);
+    const email = userDetails.email;
+    const firstName = userDetails.given_name;
+    const lastName = userDetails.family_name;
+    signupPost(firstName, lastName, email);
+  };
+
+  const onOauthFailure = () => {
+    console.log('Login Failed');
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -90,8 +99,8 @@ export default function SignUp() {
           <div className="oauth">
             <GoogleLogin
               className="oauth"
-              onSuccess={onSuccess}
-              onError={onFailure}
+              onSuccess={onOauthSuccess}
+              onError={onOauthFailure}
               text="signup_with"
               width="500px"
             />
