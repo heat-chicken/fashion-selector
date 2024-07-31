@@ -131,7 +131,13 @@ app.post(
 );
 
 app.post("/api/bing", fashionAdvisorController.matchService, (req, res) => {
-  console.log("serving match generater");
+  console.log("serving match generator");
+
+  return res.status(200);
+});
+
+app.post("/api/bingUpload", upload.single("uploadImage"), fashionAdvisorController.uploadMatch, (req, res) => {
+  console.log("serving upload match search");
 
   return res.status(200);
 });
