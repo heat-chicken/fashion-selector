@@ -2,6 +2,8 @@
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Cookies = require("js-cookie");
+
 const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
 
@@ -77,6 +79,13 @@ userController.login = async (req, res) => {
       expiresIn: "1h",
     });
     console.log("Generated token:", token);
+
+    // Set the token as an HTTP-only cookie
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 3600000, // 1 hour
+    });
 
     res.status(200).json({
       message: "Login successful",
