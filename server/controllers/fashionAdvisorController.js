@@ -1,7 +1,6 @@
 const fashionAdvisorController = {};
 const dotenv = require('dotenv');
 const fs = require('fs');
-const FileReader = require('filereader')
 
 dotenv.config();
 // console.log(dotenv.config())
@@ -80,31 +79,13 @@ function dataURLtoFile(dataurl, filename) {
   return new File([u8arr], filename, { type: mime });
 }
 fashionAdvisorController.ImgEditService = async (req, res, next) => {
-  //console.log('file', req.file);
-  //console.log('body', req.body);
-
-  
-
-
-  // function BlobtoDataURL(arrayBuffer) {
-  //   var arr = dataurl.split(','),
-  //     mime = arr[0].match(/:(.*?);/)[1],
-  //     bstr = atob(arr[arr.length - 1]),
-  //     n = bstr.length,
-  //     u8arr = new Uint8Array(n);
-  //   while (n--) {
-  //     u8arr[n] = bstr.charCodeAt(n);
-  //   }
-  //   return new File([u8arr], filename, { type: mime });
-  // }
-
-  
+ 
   
   
   try {
 
     const imageFile = dataURLtoFile(req.body.uploadImage, 'image.png');
-    const prompt = `${req.body.item}.`
+    const prompt = `A realistic photograph of a ${req.body.item}.`
     const form = new FormData();
     form.append('prompt', prompt);
     form.append('image', imageFile);
@@ -212,11 +193,12 @@ fashionAdvisorController.matchService = async (req, res, next) => {
 };
 
 fashionAdvisorController.uploadMatch = async (req, res, next) => {
-  // {"imageUrl":"https://m.media-amazon.com/images/I/71Vi50Jz6DL._AC_UY1000_.jpg"} to test
 
-  // console.log(req.body)
 
   try {
+    // const knowledgeRequest = JSON.stringify({
+    //   invokedSkills:["SimilarProducts"]
+    // });
     const imageFile = dataURLtoFile(req.body.uploadImage, 'image.png');
     //const { imageUrl } = req.body; //Dall-e's image url is in req.body
     if (!imageFile) {
@@ -227,6 +209,7 @@ fashionAdvisorController.uploadMatch = async (req, res, next) => {
 
     const formData = new FormData();
     formData.append('image', imageFile);
+    // formData.append('knowledgeRequest', knowledgeRequest);
 
     const params = new URLSearchParams({ mkt: 'en-us', name: 'image', filename: 'image.png' });
 
@@ -248,11 +231,6 @@ fashionAdvisorController.uploadMatch = async (req, res, next) => {
 
     const data = await response.json();
 
-    // Extract only contentUrl and hostPageUrl contains "shop" from the response
-    // can be further processed
-    // contentUrl: the image to display
-    // hostPageUrl: for user to click on
-    // console.log(data)
     const simplifiedData = data.tags[0].actions
       .filter((action) => action.actionType === 'VisualSearch')
       .flatMap((action) => action.data.value)
