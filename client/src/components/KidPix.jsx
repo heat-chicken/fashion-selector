@@ -40,6 +40,8 @@ const KidPix = ({
   updateImgUploadURL,
   lines,
   setLines,
+  handleNoClick,
+  handleYesClick,
 }) => {
   //image uploading code
 
@@ -63,7 +65,7 @@ const KidPix = ({
   };
 
   const handleMouseMove = (e) => {
-    if (!isDrawing.current||!lineStore.drawable) {
+    if (!isDrawing.current || !lineStore.drawable) {
       return;
     }
 
@@ -135,7 +137,6 @@ const KidPix = ({
               tension={0.5}
               lineCap='round'
               lineJoin='round'
-              
             />
           ))}
           <Image
@@ -143,7 +144,9 @@ const KidPix = ({
             width={512}
             height={512}
             crossOrigin='Anonymous'
-            globalCompositeOperation={lineStore.eraseInverse ? 'source-atop' : 'source-out'}
+            globalCompositeOperation={
+              lineStore.eraseInverse ? 'source-atop' : 'source-out'
+            }
           />
         </Layer>
         <Layer>
@@ -167,6 +170,12 @@ const KidPix = ({
           ))}
         </Layer>
       </Stage>
+      {imgUploadURL && (
+        <div>
+          <button onClick={handleNoClick}>No</button>
+          <button onClick={handleYesClick}>Yes</button>
+        </div>
+      )}
     </div>
   );
 };

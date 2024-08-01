@@ -7,10 +7,13 @@ import ShowImages from './ShowImages';
 import KidPix from './KidPix';
 import CircularProgress from '@mui/material/CircularProgress';
 import LinearProgress from '@mui/material/LinearProgress';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearView, generate, bingSearch  } from '../slices/promptSlice'
 
 function Upload() {
+  const [errors, setErrors] = useState({
+    itemDescription: false,
+  });
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
   const [currentPrompt, setCurrentPrompt] = useState('');
   const [bingData, setBingData] = useState('');
@@ -20,6 +23,7 @@ function Upload() {
   const [imageUpload, setImageUpload] = useState();
   const [lines, setLines] = useState([]);
   const imgRef = useRef(null);
+  const itemDescription = useSelector(store => store.prompt.itemDescription);
   const dispatch = useDispatch();
 
   const handleImageGenerated = (imageUrl, prompt) => {
@@ -28,6 +32,56 @@ function Upload() {
     updateImgUploadURL(imageUrl);
     dispatch(clearView())
     setLoading(false);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const newErrors = {
+      itemDescription: !itemDescription,
+    };
+    setErrors(newErrors);
+
+    if (!itemDescription) {
+      setLoading(false);
+      return;
+    }
+    await dispatch(generate())
+
+    setLoading(true);
+
+    //console.log('ref', imgRef.current)
+
+    
+    try {
+      const uploadImage = imgRef.current.toDataURL();
+      
+      console.log('uploadImage', uploadImage)
+  
+      const formData = new FormData();
+      formData.append(
+        'item',
+        itemDescription
+      );
+      formData.append('uploadImage', uploadImage);
+      const response = await fetch('/api/editImage', {
+        method: 'POST',
+
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          'Network response was not ok in ImageForm.jsx handleSubmit'
+        );
+      }
+
+      const data = await response.json();
+      setLoading(false);
+      console.log('data:', data);
+      handleImageGenerated(data.image_url, itemDescription); // item color and style are passed as an object to the onImageGenerated function so that it can be used in the Search component
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const handleNoClick = async () => {
@@ -109,22 +163,13 @@ function Upload() {
           setCurrentImageUrl={setCurrentImageUrl}
           imageUpload={imageUpload}
           imgRef={imgRef}
+          handleSubmit = {handleSubmit}
+          errors = {errors}
+          setErrors={setErrors}
         />
         <br />
         {loading && <CircularProgress />}
-        {currentImageUrl && (
-          <div>
-            <img
-              src={currentImageUrl}
-              alt='Generated'
-              className='generatedImg'
-              height='300px'
-            />
-            <br />
-            <button onClick={handleNoClick}>No</button>
-            <button onClick={handleYesClick}>Yes</button>
-          </div>
-        )}
+   
       </div>
 
       <KidPix
@@ -134,6 +179,8 @@ function Upload() {
         updateImgUploadURL = {updateImgUploadURL}
         lines = {lines}
         setLines = {setLines}
+        handleNoClick = {handleNoClick}
+        handleYesClick = {handleYesClick}
       />
 </div>
 
