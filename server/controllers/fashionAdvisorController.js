@@ -1,7 +1,7 @@
 const fashionAdvisorController = {};
 const dotenv = require('dotenv');
 const fs = require('fs');
-const FileReader = require('filereader')
+//const FileReader = require('filereader');
 
 dotenv.config();
 // console.log(dotenv.config())
