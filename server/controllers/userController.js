@@ -85,6 +85,7 @@ userController.login = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 3600000, // 1 hour
+      path: "/",
     });
 
     res.status(200).json({
