@@ -16,12 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login } from '../slices/userSlice';
-
-// import Cookies from "js-cookie";
-
-const google_key = process.env.CLIENT_ID;
 
 function Copyright(props) {
   return (
@@ -52,9 +48,6 @@ export default function SignIn() {
   const [error, setError] = useState('');
 
   const dispatch = useDispatch();
-  // Redux example:
-  // const lastName = useSelector((store) => store.user.lastName);
-  // console.log('lastName from Redux state:', lastName);
 
   const navigate = useNavigate(); // remember! react hooks are generally called at the top level of our component function, not inside of event handlers. scope is the key to understanding here.
 
@@ -78,8 +71,6 @@ export default function SignIn() {
       }
 
       const data = await response.json();
-      // localStorage.setItem("token", data.token);
-      // console.log("Token stored:", data.token);
 
       dispatch(
         login({
@@ -94,58 +85,8 @@ export default function SignIn() {
     }
   };
 
-  const handleSubmitOauth = async (
-    firstName,
-    lastName,
-    email,
-    password = '',
-    loginAttempts = 0
-  ) => {
-    console.log('in handleSubmitOauth');
-    const loginStatus = false;
-    console.log('loginAttempts:', loginAttempts);
-    if (loginAttempts <= 2) {
-      try {
-        const response = await fetch('/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          console.log('login didnt work but maybe thats ok');
-          const errorData = await response.json();
-          // throw new Error(errorData.error || 'Login failed');
-        } else {
-          loginStatus = true;
-        }
-
-        const data = await response.json();
-        console.log('data:', data);
-        // localStorage.setItem("token", data.token);
-        // console.log("Token stored:", data.token);
-
-        dispatch(
-          login({
-            email: data.user.email,
-            token: data.token,
-          })
-        );
-
-        navigate('/search');
-      } catch (error) {
-        setError(error.message);
-      }
-      return loginStatus;
-    }
-  };
-
   // for google oauth
   const onSuccess = async (res) => {
-    console.log('in onSuccess');
     const userDetails = jwtDecode(res.credential);
     const email = userDetails.email;
     const firstName = userDetails.given_name;
@@ -162,15 +103,11 @@ export default function SignIn() {
       });
 
       if (!response.ok) {
-        console.log('oauth fail');
         const errorData = await response.json();
         throw new Error(errorData.error || 'Login failed');
       }
 
       const data = await response.json();
-      console.log('data:', data);
-      // localStorage.setItem("token", data.token);
-      // console.log("Token stored:", data.token);
 
       dispatch(
         login({
@@ -183,50 +120,6 @@ export default function SignIn() {
     } catch (error) {
       setError(error.message);
     }
-
-    // // Try to login user on Oauth login
-    // const loggedIn = await handleSubmitOauth(firstName, lastName, email);
-    // // If Oauth login fails, try to sign up the user
-    // if (loggedIn === false) {
-    //   try {
-    //     console.log('now we are trying signup');
-    //     const response = await fetch('/api/signup', {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       body: JSON.stringify({
-    //         firstName,
-    //         lastName,
-    //         email,
-    //         password,
-    //       }),
-    //     });
-
-    //     await handleSubmitOauth(firstName, lastName, email);
-
-    //     if (!response.ok) {
-    //       const errorData = await response.json();
-    //       throw new Error(errorData.error || 'Signup failed');
-    //     }
-    //     const data = await response.json();
-    //     // localStorage.setItem("token", data.token);
-    //     // console.log("Token stored:", data.token);
-
-    //     // dispatch(
-    //     //   login({
-    //     //     email: data.user.email,
-    //     //     token: data.token,
-    //     //   })
-    //     // );
-    //     // navigate('/search');
-    //   } catch (error) {
-    //     setError(error.message);
-    //   }
-    // }
-
-    // need to change to search page
-    // navigate('/SecretCloset');
   };
 
   const onFailure = (res) => {

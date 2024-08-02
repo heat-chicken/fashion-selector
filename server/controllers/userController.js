@@ -77,7 +77,6 @@ userController.login = async (req, res) => {
     const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
       expiresIn: '1h',
     });
-    console.log('Generated token:', token);
 
     // Set the token as an HTTP-only cookie
     res.cookie('authToken', token, {
@@ -133,9 +132,7 @@ userController.oauth = async (req, res) => {
         ])
         .select()
         .single();
-      // console.log('response:', response);
       currentUser = newUser;
-      console.log('currentUser ID', currentUser.id);
       if (err) throw err;
     }
     // Create and assign a token
@@ -146,7 +143,6 @@ userController.oauth = async (req, res) => {
         expiresIn: '1h',
       }
     );
-    console.log('Generated token:', token);
 
     // Set the token as an HTTP-only cookie
     res.cookie('authToken', token, {
