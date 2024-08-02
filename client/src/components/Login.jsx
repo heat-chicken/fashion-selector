@@ -1,5 +1,5 @@
 // client/src/components/Login.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -31,12 +31,12 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
         Your Website
-      </Link>{" "}
+      </Link>{' '}
       {new Date().getFullYear()}
-      {"."}
+      {'.'}
     </Typography>
   );
 }
@@ -47,9 +47,9 @@ const defaultTheme = createTheme();
 
 // standard login
 export default function SignIn() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const dispatch = useDispatch();
   // Redux example:
@@ -60,21 +60,21 @@ export default function SignIn() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError("");
+    setError('');
 
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
+      const response = await fetch('/api/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-        credentials: "include",
+        credentials: 'include',
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Login failed");
+        throw new Error(errorData.error || 'Login failed');
       }
 
       const data = await response.json();
@@ -88,33 +88,116 @@ export default function SignIn() {
         })
       );
 
-      navigate("/search");
+      navigate('/search');
     } catch (error) {
       setError(error.message);
     }
   };
 
+  const handleSubmitOauth = async (
+    firstName,
+    lastName,
+    email,
+    password = '',
+    loginAttempts = 0
+  ) => {
+    console.log('in handleSubmitOauth');
+    const loginStatus = false;
+    loginAttempts++;
+    console.log('loginAttempts:', loginAttempts);
+    if (loginAttempts <= 2) {
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          console.log('login didnt work but maybe thats ok');
+          const errorData = await response.json();
+          // throw new Error(errorData.error || 'Login failed');
+        } else {
+          loginStatus = true;
+        }
+
+        const data = await response.json();
+        console.log('data:', data);
+        // localStorage.setItem("token", data.token);
+        // console.log("Token stored:", data.token);
+
+        dispatch(
+          login({
+            email: data.user.email,
+            token: data.token,
+          })
+        );
+
+        navigate('/search');
+      } catch (error) {
+        setError(error.message);
+      }
+      return loginStatus;
+    }
+  };
+
   // for google oauth
   const onSuccess = async (res) => {
+    console.log('in onSuccess');
     const userDetails = jwtDecode(res.credential);
     const email = userDetails.email;
     const firstName = userDetails.given_name;
     const lastName = userDetails.family_name;
-    dispatch(
-      login({
-        email,
-        firstName,
-        lastName,
-      })
-    );
-    console.log("successfully logged in");
+    // Try to login user on Oauth login
+    const loggedIn = await handleSubmitOauth(firstName, lastName, email);
+    // If Oauth login fails, try to sign up the user
+    if (loggedIn === false) {
+      try {
+        console.log('now we are trying signup');
+        const response = await fetch('/api/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+            password,
+          }),
+        });
+
+        await handleSubmitOauth(firstName, lastName, email);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Signup failed');
+        }
+        const data = await response.json();
+        // localStorage.setItem("token", data.token);
+        // console.log("Token stored:", data.token);
+
+        // dispatch(
+        //   login({
+        //     email: data.user.email,
+        //     token: data.token,
+        //   })
+        // );
+        // navigate('/search');
+      } catch (error) {
+        setError(error.message);
+      }
+    }
 
     // need to change to search page
-    navigate("/SecretCloset");
+    // navigate('/SecretCloset');
   };
 
   const onFailure = (res) => {
-    console.log("fail", res);
+    console.log('fail', res);
   };
 
   return (
@@ -124,12 +207,12 @@ export default function SignIn() {
         <Box
           sx={{
             marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
