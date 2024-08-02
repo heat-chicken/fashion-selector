@@ -103,7 +103,6 @@ export default function SignIn() {
   ) => {
     console.log('in handleSubmitOauth');
     const loginStatus = false;
-    loginAttempts++;
     console.log('loginAttempts:', loginAttempts);
     if (loginAttempts <= 2) {
       try {
@@ -151,46 +150,80 @@ export default function SignIn() {
     const email = userDetails.email;
     const firstName = userDetails.given_name;
     const lastName = userDetails.family_name;
-    // Try to login user on Oauth login
-    const loggedIn = await handleSubmitOauth(firstName, lastName, email);
-    // If Oauth login fails, try to sign up the user
-    if (loggedIn === false) {
-      try {
-        console.log('now we are trying signup');
-        const response = await fetch('/api/signup', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            firstName,
-            lastName,
-            email,
-            password,
-          }),
-        });
 
-        await handleSubmitOauth(firstName, lastName, email);
+    try {
+      const response = await fetch('/api/oauth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, firstName, lastName }),
+        credentials: 'include',
+      });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Signup failed');
-        }
-        const data = await response.json();
-        // localStorage.setItem("token", data.token);
-        // console.log("Token stored:", data.token);
-
-        // dispatch(
-        //   login({
-        //     email: data.user.email,
-        //     token: data.token,
-        //   })
-        // );
-        // navigate('/search');
-      } catch (error) {
-        setError(error.message);
+      if (!response.ok) {
+        console.log('oauth fail');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Login failed');
       }
+
+      const data = await response.json();
+      console.log('data:', data);
+      // localStorage.setItem("token", data.token);
+      // console.log("Token stored:", data.token);
+
+      dispatch(
+        login({
+          email: data.user.email,
+          token: data.token,
+        })
+      );
+
+      navigate('/search');
+    } catch (error) {
+      setError(error.message);
     }
+
+    // // Try to login user on Oauth login
+    // const loggedIn = await handleSubmitOauth(firstName, lastName, email);
+    // // If Oauth login fails, try to sign up the user
+    // if (loggedIn === false) {
+    //   try {
+    //     console.log('now we are trying signup');
+    //     const response = await fetch('/api/signup', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify({
+    //         firstName,
+    //         lastName,
+    //         email,
+    //         password,
+    //       }),
+    //     });
+
+    //     await handleSubmitOauth(firstName, lastName, email);
+
+    //     if (!response.ok) {
+    //       const errorData = await response.json();
+    //       throw new Error(errorData.error || 'Signup failed');
+    //     }
+    //     const data = await response.json();
+    //     // localStorage.setItem("token", data.token);
+    //     // console.log("Token stored:", data.token);
+
+    //     // dispatch(
+    //     //   login({
+    //     //     email: data.user.email,
+    //     //     token: data.token,
+    //     //   })
+    //     // );
+    //     // navigate('/search');
+    //   } catch (error) {
+    //     setError(error.message);
+    //   }
+    // }
 
     // need to change to search page
     // navigate('/SecretCloset');

@@ -103,4 +103,73 @@ userController.login = async (req, res) => {
   }
 };
 
+userController.oauth = async (req, res) => {
+  const { firstName, lastName, email, password } = req.body;
+
+  try {
+    let currentUser;
+    // Check if user already exists
+    const { data: user, error } = await supabase
+      .from('user')
+      .select('email')
+      .eq('email', email)
+      .single();
+    if (user) {
+      currentUser = user;
+    } else {
+      // Create empty password
+      const password = '';
+
+      // Insert user into the database
+      const { data: newUser, err } = await supabase
+        .from('user')
+        .insert([
+          {
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            password,
+          },
+        ])
+        .select()
+        .single();
+      // console.log('response:', response);
+      currentUser = newUser;
+      console.log('currentUser ID', currentUser.id);
+      if (err) throw err;
+    }
+    // Create and assign a token
+    const token = jwt.sign(
+      { id: currentUser.id, email: currentUser.email },
+      JWT_SECRET,
+      {
+        expiresIn: '1h',
+      }
+    );
+    console.log('Generated token:', token);
+
+    // Set the token as an HTTP-only cookie
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 3600000, // 1 hour
+      path: '/',
+    });
+
+    return res.status(200).json({
+      message: 'Login successful',
+      token,
+      user: {
+        id: currentUser.id,
+        email: currentUser.email,
+        firstName: currentUser.first_name,
+        lastName: currentUser.last_name,
+      },
+    });
+  } catch (error) {
+    console.error('Signup error:', error);
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = userController;

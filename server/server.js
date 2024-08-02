@@ -37,37 +37,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.post(
-//   '/api/genImage',
-
-//   (req, res) => {
-//     console.log('serving image generater');
-//     image_url = 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883'
-//     return res.status(200).json({image_url});
-//   }
-// );
-
-// app.post('/api/bing',  (req, res) => {
-//   console.log('serving match generater');
-
-//   const result = [{        contentUrl: 'https://www.oncueapparel.com/cdn/shop/products/Cat_and_Pizza_TS.jpg?v=1573994704',
-//     hostPageUrl: 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883',
-//     name: 'TEST1'}, {        contentUrl: 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883',
-//     hostPageUrl: 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883',
-//     name: 'TEST2'},{        contentUrl: 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883',
-//     hostPageUrl: 'https://www.shelfies.com/cdn/shop/products/ABSTRACT-COLOR-Tee-Front-Mask_1500x.jpg?v=1593644883',
-//     name: 'TEST3'}]
-
-//   return res.status(200).json(result);
-// });
-
 app.post('/api/signup', userController.signUp);
 app.post('/api/login', userController.login);
+app.post('/api/oauth', userController.oauth);
 
 const authMiddleware = (req, res, next) => {
-  // const authHeader = req.headers["authorization"];
-  // const token = authHeader && authHeader.split(" ")[1];
-
   const token = req.cookies.authToken;
 
   if (!token) {
@@ -75,9 +49,7 @@ const authMiddleware = (req, res, next) => {
   }
 
   try {
-    // console.log("Token received:", token);
     const decoded = jwt.verify(token, JWT_SECRET);
-    // console.log("Decoded token:", decoded);
     req.user = { email: decoded.email };
     next();
   } catch (error) {
@@ -95,20 +67,6 @@ app.post('/api/save', authMiddleware, SB_func.insertItemsToDatabase);
 app.get('/api/check-auth', authMiddleware, (req, res) => {
   res.status(200).json({ authenticated: true });
 });
-
-// app.post('/api/save', SB_func.insertItemsToDatabase  , (req, res) => {
-
-//     console.log('serving saving images');
-
-//     return res.status(200);
-// })
-
-// app.get('/api/getsaveImg', SB_func.getSavedImg  , (req, res) => {
-
-//   console.log('serving gettinng saved images');
-
-//   return res.status(200);
-// })
 
 app.post(
   '/api/genImage',
