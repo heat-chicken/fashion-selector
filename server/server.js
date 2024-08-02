@@ -90,6 +90,9 @@ const authMiddleware = (req, res, next) => {
 // Use this middleware for protected routes
 app.get("/api/getsaveImg", authMiddleware, SB_func.getSavedImg);
 app.post("/api/save", authMiddleware, SB_func.insertItemsToDatabase);
+app.get("/api/check-auth", authMiddleware, (req, res) => {
+  res.status(200).json({ authenticated: true });
+});
 
 // app.post('/api/save', SB_func.insertItemsToDatabase  , (req, res) => {
 
