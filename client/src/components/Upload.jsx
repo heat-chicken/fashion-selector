@@ -179,7 +179,7 @@ function Upload() {
         updateImgUploadURL = {updateImgUploadURL}
         lines = {lines}
         setLines = {setLines}
-        handleNoClick = {handleNoClick}
+        handleSubmit = {handleSubmit}
         handleYesClick = {handleYesClick}
       />
 </div>

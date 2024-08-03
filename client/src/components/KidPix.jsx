@@ -40,7 +40,7 @@ const KidPix = ({
   updateImgUploadURL,
   lines,
   setLines,
-  handleNoClick,
+  handleSubmit,
   handleYesClick,
 }) => {
   //image uploading code
@@ -59,9 +59,11 @@ const KidPix = ({
   const isDrawing = useRef(false);
 
   const handleMouseDown = (e) => {
-    isDrawing.current = true;
-    const pos = e.target.getStage().getPointerPosition();
-    setLines([...lines, { tool, points: [pos.x, pos.y] }]);
+    if (tool == 'eraser') {
+      isDrawing.current = true;
+      const pos = e.target.getStage().getPointerPosition();
+      setLines([...lines, { tool, points: [pos.x, pos.y] }]);
+    }
   };
 
   const handleMouseMove = (e) => {
@@ -80,6 +82,18 @@ const KidPix = ({
 
   const handleMouseUp = () => {
     isDrawing.current = false;
+  };  
+
+  //dragging logic
+  const [dragState, updateDrag] = useState({x:0, y: 0, dragHide: false})
+
+  const dragStartHandler = (e) => {
+    console.log(e.target)
+    updateDrag({...dragState, dragHide: true})
+  };
+
+  const dragEndHandler = (e) => {
+    updateDrag({...dragState, x: e.target.attrs.x, y : e.target.attrs.y, dragHide: false})
   };
 
   return (
@@ -115,7 +129,7 @@ const KidPix = ({
               setTool(e.target.value);
             }}
           >
-            <MenuItem value='pen'>Pen</MenuItem>
+            <MenuItem value='drag'>Drag</MenuItem>
             <MenuItem value='eraser'>Eraser</MenuItem>
           </Select>
         </FormControl>
@@ -141,20 +155,26 @@ const KidPix = ({
           ))}
           <Image
             image={image}
-            width={512}
-            height={512}
+            // width={512}
+            // height={512}
             crossOrigin='Anonymous'
             globalCompositeOperation={
               lineStore.eraseInverse ? 'source-atop' : 'source-out'
             }
+            x={dragState.x}
+            y={dragState.y}
+            visible = {!dragState.dragHide}
           />
         </Layer>
         <Layer>
           <Image
             image={image}
-            width={512}
-            height={512}
+            // width={512}
+            // height={512}
             crossOrigin='Anonymous'
+            draggable = {tool==='drag'}
+            onDragStart = {dragStartHandler}
+            onDragEnd = {dragEndHandler}
           />
           {lines.map((line, i) => (
             <Line
@@ -172,7 +192,7 @@ const KidPix = ({
       </Stage>
       {imgUploadURL && (
         <div>
-          <button onClick={handleNoClick}>No</button>
+          <button onClick={handleSubmit}>No</button>
           <button onClick={handleYesClick}>Yes</button>
         </div>
       )}

@@ -25,9 +25,8 @@ function ImageForm({ onImageGenerated, handleSubmit, imageUpload, errors, setErr
         value={itemDescription}
         onChange={(e) => dispatch(describe(e.target.value))}
         error={errors.itemDescription}
-        helperText={errors.itemDescription ? 'Item description is required' : ''}
         multiline
-        helperText={'Describe the clothes in detail: color, style, features, etc.'}
+        helperText={errors.itemDescription ? 'Item description is required' : 'Describe the clothes in detail: color, style, features, etc.'}
         rows = {5}
       />
       <br />
