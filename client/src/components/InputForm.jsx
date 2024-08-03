@@ -61,7 +61,6 @@ function InputForm({ onImageGenerated, setCurrentImageUrl }) {
   };
 
 
-
   return (
     <form onSubmit={handleSubmit}>
       <TextField

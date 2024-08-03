@@ -63,10 +63,49 @@ test.describe('Search Page', () => {
         }
     })
 
-    test('generate image button', async ({page}) => {
+    test('generate image button functionality', async ({page}) => {
+        test.setTimeout(60000);
         await expect(page.getByRole('button', {name: 'Generate Image'})).toBeVisible();
+
+        await page.getByLabel('Item').fill('Hat');
+        await page.getByLabel('color').fill('Brown');
+        await page.getByLabel('style').fill('Bowler');
+        await page.getByLabel('features').fill('Leather');
+        page.on('request', request => {
+            if(request.method() === 'POST'){ 
+                console.log('>>', request.method(), '\n', 'req url: ', request.url(), '\n', 'req body: ', request.postData())
+            };            
+            if(request.method() === 'GET'){
+                console.log('>>', request.method(),)
+            };
+        });
+        page.on('response', response => {
+            if(response.status() === 200){
+                console.log('<<', response.status())
+            }
+        });
+    
+        await page.getByRole('button', {name: 'Generate Image'}).click();
+
+        // recieves image as response
+        await expect(page.getByAltText('generated')).toBeVisible({ timeout: 15000 });
+        await page.getByAltText('generated').screenshot({ path: 'generatedImg.png' });
+
+        // generates yes and no buttons
+        await expect(page.getByRole('button', {name: 'yes'})).toBeVisible();
+        await expect(page.getByRole('button', {name: 'no'})).toBeVisible();
+
+        // no button sends a second post request and recieves another image
+        await page.getByRole('button', {name: 'no'}).click();
+        await expect(page.getByAltText('generated')).toBeVisible({ timeout: 15000 });
+        await page.getByAltText('generated').screenshot({ path: '2ndgeneratedImg.png' });
+
+        // yes button sends a post request to bing API
+        await page.getByRole('button', {name: 'yes'}).click(); 
+        await expect(page.getByRole('list')).toBeVisible({ timeout: 15000 });
+        // yes no button -- bing search -- save
     })
-})
+});
 
 test.describe('Upload Page', () => {
     test.beforeEach(async ({page}) => {
@@ -75,5 +114,5 @@ test.describe('Upload Page', () => {
 
     test('prompt form', async ({page}) => {
         await expect(page.getByLabel('Item Description')).toBeEditable();
-    })
-})
+    });
+});
