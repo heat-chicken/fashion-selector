@@ -63,10 +63,72 @@ test.describe('Search Page', () => {
         }
     })
 
-    test('generate image button', async ({page}) => {
+    test('generate image button submits POST request & recieves image as response', async ({page}) => {
         await expect(page.getByRole('button', {name: 'Generate Image'})).toBeVisible();
+
+        await page.getByLabel('Item').fill('Hat');
+        await page.getByLabel('color').fill('Brown');
+        await page.getByLabel('style').fill('Bowler');
+        await page.getByLabel('features').fill('Leather');
+        page.on('request', request => console.log('>>', request.method(), request.url(), 'req body: ', request.postData()));
+        page.on('response', response => console.log('<<', response.status(), response.url()));
+        await page.getByRole('button', {name: 'Generate Image'}).click();
+        await expect(page.getByAltText('generated')).toBeVisible({ timeout: 15000 });
+        await page.getByAltText('generated').screenshot({ path: 'generatedImg.png' });
     })
-})
+
+    // test('testing .route', async({page})=> {
+    //     const mockData = {
+    //         "Item": 'Hat',
+    //         "color": 'Brown',
+    //         "style": 'Bowler',
+    //         "features": 'Leather'
+    //     };
+    //     let mock;
+    //     await page.route('/api/genImage', async route => {
+    //         if (route.request().postData().includes('Item'))
+    //           mock = await route.fulfill({ body: {mockData} });
+    //         else
+    //           await route.continue();
+    //     });
+    //     console.log('mock: ', mock.body)
+    // })
+
+
+   // test.describe('API tests', () => {
+        // let apiContext;
+        // test.beforeAll(async ({ playwright }) => {
+        //     apiContext = await playwright.request.newContext({
+        //       // All requests we send go to this API endpoint.
+        //       baseURL: 'https://api.openai.com/',
+        //       extraHTTPHeaders: {
+        //         // We set this header per GitHub guidelines.
+        //         'Accept': 'v1/images',
+        //         // Add authorization token to all requests.
+        //         // Assuming personal access token available in the environment.
+        //         'Authorization': `token ${process.env.OPENAI_API_KEY}`,
+        //       },
+        //     });
+        // });
+
+        // test.afterAll(async ({ }) => {
+        //     // Dispose all responses.
+        //     await apiContext.dispose();
+        // });
+
+        // test('make post request', async ({ page }) => {
+        //     const newImage = await apiContext.post(`/images/generations`, {
+        //       prompt: 'Create an image of the american flag'
+        //     });
+        //     expect(newImage.ok()).toBeTruthy();
+        // });
+
+       // test('Generate Image Button submits POST request', async ({page}) => {
+            
+
+        //})
+    //});
+});
 
 test.describe('Upload Page', () => {
     test.beforeEach(async ({page}) => {
@@ -75,5 +137,5 @@ test.describe('Upload Page', () => {
 
     test('prompt form', async ({page}) => {
         await expect(page.getByLabel('Item Description')).toBeEditable();
-    })
-})
+    });
+});
