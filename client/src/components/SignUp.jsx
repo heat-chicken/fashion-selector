@@ -15,6 +15,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
+import { useDispatch } from 'react-redux';
+import { login } from '../slices/userSlice';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -28,8 +30,15 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const signupPost = async (firstName, lastName, email, password = '') => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
+    const firstName = event.target.elements.firstName.value;
+    const lastName = event.target.elements.email.value;
+    const email = event.target.elements.email.value;
+    const password = event.target.elements.password.value;
     try {
       const response = await fetch('/api/signup', {
         method: 'POST',
@@ -56,22 +65,40 @@ export default function SignUp() {
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setError('');
-    const firstName = event.target.elements.firstName.value;
-    const lastName = event.target.elements.email.value;
-    const email = event.target.elements.email.value;
-    const password = event.target.elements.password.value;
-    signupPost(firstName, lastName, email, password);
-  };
-
-  const onOauthSuccess = (res) => {
+  const onSuccess = async (res) => {
     const userDetails = jwtDecode(res.credential);
     const email = userDetails.email;
     const firstName = userDetails.given_name;
     const lastName = userDetails.family_name;
-    signupPost(firstName, lastName, email);
+
+    try {
+      const response = await fetch('/api/oauth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, firstName, lastName }),
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Login failed');
+      }
+
+      const data = await response.json();
+
+      dispatch(
+        login({
+          email: data.user.email,
+          token: data.token,
+        })
+      );
+
+      navigate('/search');
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const onOauthFailure = () => {
@@ -99,7 +126,7 @@ export default function SignUp() {
           <div className="oauth">
             <GoogleLogin
               className="oauth"
-              onSuccess={onOauthSuccess}
+              onSuccess={onSuccess}
               onError={onOauthFailure}
               text="signup_with"
               width="500px"
