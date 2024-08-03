@@ -8,7 +8,7 @@ import KidPix from './KidPix';
 import CircularProgress from '@mui/material/CircularProgress';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearView, generate, bingSearch  } from '../slices/promptSlice'
+import { clearView, generate, bingSearch } from '../slices/promptSlice';
 
 function Upload() {
   const [errors, setErrors] = useState({
@@ -22,15 +22,18 @@ function Upload() {
   const [loading_bing, setLoading_bing] = useState(false);
   const [imageUpload, setImageUpload] = useState();
   const [lines, setLines] = useState([]);
+  const [imgUploadURL, updateImgUploadURL] = useState();
+  const [dragState, updateDrag] = useState({ x: 0, y: 0, dragHide: false });
   const imgRef = useRef(null);
-  const itemDescription = useSelector(store => store.prompt.itemDescription);
+  const itemDescription = useSelector((store) => store.prompt.itemDescription);
   const dispatch = useDispatch();
 
   const handleImageGenerated = (imageUrl, prompt) => {
     setCurrentImageUrl(imageUrl);
     setCurrentPrompt(prompt);
     updateImgUploadURL(imageUrl);
-    dispatch(clearView())
+    updateDrag({ x: 0, y: 0, dragHide: false });
+    dispatch(clearView());
     setLoading(false);
   };
 
@@ -45,23 +48,19 @@ function Upload() {
       setLoading(false);
       return;
     }
-    await dispatch(generate())
+    await dispatch(generate());
 
     setLoading(true);
 
     //console.log('ref', imgRef.current)
 
-    
     try {
       const uploadImage = imgRef.current.toDataURL();
-      
-      console.log('uploadImage', uploadImage)
-  
+
+      console.log('uploadImage', uploadImage);
+
       const formData = new FormData();
-      formData.append(
-        'item',
-        itemDescription
-      );
+      formData.append('item', itemDescription);
       formData.append('uploadImage', uploadImage);
       const response = await fetch('/api/editImage', {
         method: 'POST',
@@ -120,7 +119,7 @@ function Upload() {
     try {
       const uploadImage = imgRef.current.toDataURL();
       const formData = new FormData();
-    formData.append('uploadImage', uploadImage);
+      formData.append('uploadImage', uploadImage);
       const response = await fetch('/api/bingUpload', {
         method: 'POST',
         body: formData,
@@ -142,57 +141,69 @@ function Upload() {
     }
   };
 
-  const [imgUploadURL, updateImgUploadURL] = useState();
-
   return (
     <>
-    <div
-      className='search-page pages'
-      style={{
-        display: 'flex',
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
-        margin: '50px 80px',
-        justifyContent: 'space-around',
-      }}
-    >
-      <div style={{ minWidth: '350px' }}>
-        <h1>Discover Your Style</h1>
-        {/* // InputForm component with onImageGenerated prop */}
-        <ImageForm
-          onImageGenerated={handleImageGenerated}
-          setCurrentImageUrl={setCurrentImageUrl}
-          imageUpload={imageUpload}
-          imgRef={imgRef}
-          handleSubmit = {handleSubmit}
-          errors = {errors}
-          setErrors={setErrors}
-        />
-        <br />
-        {loading && <CircularProgress />}
-   
-      </div>
+      <div
+        className='search-page pages'
+        style={{
+          display: 'flex',
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          margin: '50px 80px',
+          justifyContent: 'space-around',
+          flexDirection: 'column',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            width: '100%',
+          }}
+        >
+          <div style={{ minWidth: '350px' }}>
+            <h1>Discover Your Style</h1>
+            {/* // InputForm component with onImageGenerated prop */}
+            <ImageForm
+              onImageGenerated={handleImageGenerated}
+              setCurrentImageUrl={setCurrentImageUrl}
+              imageUpload={imageUpload}
+              imgRef={imgRef}
+              handleSubmit={handleSubmit}
+              errors={errors}
+              setErrors={setErrors}
+            />
+            <br />
+            {loading && <CircularProgress />}
+          </div>
 
-      <KidPix
-        imgRef={imgRef}
-        currentImageUrl = {currentImageUrl}
-        imgUploadURL = {imgUploadURL}
-        updateImgUploadURL = {updateImgUploadURL}
-        lines = {lines}
-        setLines = {setLines}
-        handleNoClick = {handleNoClick}
-        handleYesClick = {handleYesClick}
-      />
-</div>
-
-      {bingData ? (
-        <ShowImages bingData={bingData} />
-      ) : (
-        <div>
-          {/* <img src={image} style={{ width: '100%', marginLeft: '1rem' }} /> */}
+          <KidPix
+            imgRef={imgRef}
+            currentImageUrl={currentImageUrl}
+            imgUploadURL={imgUploadURL}
+            updateImgUploadURL={updateImgUploadURL}
+            dragState={dragState}
+            updateDrag={updateDrag}
+            lines={lines}
+            setLines={setLines}
+            handleSubmit={handleSubmit}
+            handleYesClick={handleYesClick}
+          />
         </div>
-      )}
-      {loading_bing && <LinearProgress />}
-
+        <div
+          style={{
+            margin: '20px'
+          }}
+        >
+          {bingData ? (
+            <ShowImages bingData={bingData} />
+          ) : (
+            <div>
+              {/* <img src={image} style={{ width: '100%', marginLeft: '1rem' }} /> */}
+            </div>
+          )}
+          {loading_bing && <LinearProgress />}
+        </div>
+      </div>
     </>
   );
 }
