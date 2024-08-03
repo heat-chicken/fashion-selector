@@ -105,58 +105,6 @@ test.describe('Search Page', () => {
         await expect(page.getByRole('list')).toBeVisible({ timeout: 15000 });
         // yes no button -- bing search -- save
     })
-
-    // test('testing .route', async({page})=> {
-    //     const mockData = {
-    //         "Item": 'Hat',
-    //         "color": 'Brown',
-    //         "style": 'Bowler',
-    //         "features": 'Leather'
-    //     };
-    //     let mock;
-    //     await page.route('/api/genImage', async route => {
-    //         if (route.request().postData().includes('Item'))
-    //           mock = await route.fulfill({ body: {mockData} });
-    //         else
-    //           await route.continue();
-    //     });
-    //     console.log('mock: ', mock.body)
-    // })
-
-
-   // test.describe('API tests', () => {
-        // let apiContext;
-        // test.beforeAll(async ({ playwright }) => {
-        //     apiContext = await playwright.request.newContext({
-        //       // All requests we send go to this API endpoint.
-        //       baseURL: 'https://api.openai.com/',
-        //       extraHTTPHeaders: {
-        //         // We set this header per GitHub guidelines.
-        //         'Accept': 'v1/images',
-        //         // Add authorization token to all requests.
-        //         // Assuming personal access token available in the environment.
-        //         'Authorization': `token ${process.env.OPENAI_API_KEY}`,
-        //       },
-        //     });
-        // });
-
-        // test.afterAll(async ({ }) => {
-        //     // Dispose all responses.
-        //     await apiContext.dispose();
-        // });
-
-        // test('make post request', async ({ page }) => {
-        //     const newImage = await apiContext.post(`/images/generations`, {
-        //       prompt: 'Create an image of the american flag'
-        //     });
-        //     expect(newImage.ok()).toBeTruthy();
-        // });
-
-       // test('Generate Image Button submits POST request', async ({page}) => {
-            
-
-        //})
-    //});
 });
 
 test.describe('Upload Page', () => {
