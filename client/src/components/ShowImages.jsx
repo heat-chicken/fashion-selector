@@ -1,7 +1,6 @@
 // display bing search results
-import { useSelector } from "react-redux";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ImageList,
   ImageListItem,
@@ -18,6 +17,29 @@ function ShowImages({ bingData }) {
     bingData.map((image) => ({ ...image, isValid: true, btnLabel: "SAVE" }))
   );
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check authentication status when component mounts
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = async () => {
+    try {
+      const response = await fetch("/api/check-auth", {
+        credentials: "include",
+      });
+      if (response.ok) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.error("Error checking auth status:", error);
+      setIsAuthenticated(false);
+    }
+  };
+
   // in case of broken img url
   const handleImageError = (index) => {
     // change isValied prop to false if the item index matches input index
@@ -28,47 +50,27 @@ function ShowImages({ bingData }) {
     );
   };
 
-  const userEmail = useSelector((state) => state.user.email);
-  const token = useSelector((state) => state.user.token);
-
-  const save = async (index, image) => {
-
-    if (!token) {
+  const handleSave = async (index, image) => {
+    if (!isAuthenticated) {
       alert("Please log in to save images.");
       return;
     }
-    
+
     setValidImages((prevImages) =>
       prevImages.map((image, i) =>
         i === index ? { ...image, btnLabel: "SAVED!" } : image
       )
     );
 
-    // const itemsToInsert = simplifiedData.map(item => ({ url: item.contentUrl }));
-    const itemsToInsert = [{ url: image.contentUrl }];
-    //await insertItemsToDatabase(itemsToInsert);
-
-    // const response = await fetch('/api/save', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(itemsToInsert),
-    // });
-
     try {
-      const token = localStorage.getItem("token");
-      console.log("Token retrieved for save:", token);
-
       const response = await fetch("/api/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify({
           url: image.contentUrl,
-          // userEmail: userEmail,
         }),
       });
 
@@ -154,7 +156,7 @@ function ShowImages({ bingData }) {
                   </a>
                   <Button
                     variant="contained"
-                    onClick={() => save(index, image)}
+                    onClick={() => handleSave(index, image)}
                   >
                     {image.btnLabel}
                   </Button>
