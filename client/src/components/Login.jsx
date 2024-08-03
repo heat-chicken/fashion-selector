@@ -1,5 +1,5 @@
 // client/src/components/Login.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,12 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login } from '../slices/userSlice';
-
-// import Cookies from "js-cookie";
-
-const google_key = process.env.CLIENT_ID;
 
 function Copyright(props) {
   return (
@@ -31,12 +27,12 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
+      {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
         Your Website
-      </Link>{" "}
+      </Link>{' '}
       {new Date().getFullYear()}
-      {"."}
+      {'.'}
     </Typography>
   );
 }
@@ -47,39 +43,34 @@ const defaultTheme = createTheme();
 
 // standard login
 export default function SignIn() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const dispatch = useDispatch();
-  // Redux example:
-  // const lastName = useSelector((store) => store.user.lastName);
-  // console.log('lastName from Redux state:', lastName);
 
   const navigate = useNavigate(); // remember! react hooks are generally called at the top level of our component function, not inside of event handlers. scope is the key to understanding here.
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError("");
+    setError('');
 
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
+      const response = await fetch('/api/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-        credentials: "include",
+        credentials: 'include',
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Login failed");
+        throw new Error(errorData.error || 'Login failed');
       }
 
       const data = await response.json();
-      // localStorage.setItem("token", data.token);
-      // console.log("Token stored:", data.token);
 
       dispatch(
         login({
@@ -88,7 +79,7 @@ export default function SignIn() {
         })
       );
 
-      navigate("/search");
+      navigate('/search');
     } catch (error) {
       setError(error.message);
     }
@@ -100,21 +91,39 @@ export default function SignIn() {
     const email = userDetails.email;
     const firstName = userDetails.given_name;
     const lastName = userDetails.family_name;
-    dispatch(
-      login({
-        email,
-        firstName,
-        lastName,
-      })
-    );
-    console.log("successfully logged in");
 
-    // need to change to search page
-    navigate("/SecretCloset");
+    try {
+      const response = await fetch('/api/oauth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, firstName, lastName }),
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Login failed');
+      }
+
+      const data = await response.json();
+
+      dispatch(
+        login({
+          email: data.user.email,
+          token: data.token,
+        })
+      );
+
+      navigate('/search');
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const onFailure = (res) => {
-    console.log("fail", res);
+    console.log('fail', res);
   };
 
   return (
@@ -124,12 +133,12 @@ export default function SignIn() {
         <Box
           sx={{
             marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
