@@ -94,6 +94,11 @@ app.get("/api/check-auth", authMiddleware, (req, res) => {
   res.status(200).json({ authenticated: true });
 });
 
+app.post("/api/logout", (req, res) => {
+  res.clearCookie("authToken");
+  res.status(200).json({ message: "Logged out successfully" });
+});
+
 // app.post('/api/save', SB_func.insertItemsToDatabase  , (req, res) => {
 
 //     console.log('serving saving images');
